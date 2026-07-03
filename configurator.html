@@ -715,6 +715,126 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
 }
 
 /* ===========================================================
+   CP CHECKLIST (imagen Checklist.png)
+   =========================================================== */
+.mine-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:500;color:var(--text-2);
+  cursor:pointer;user-select:none;
+}
+.chk-section-title{
+  font-size:16px;font-weight:700;color:var(--text);
+  margin:22px 0 12px;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px;
+}
+.chk-section-title .st-ico{
+  width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:18px;
+}
+.chk-overall{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:6px;
+}
+.chk-overall .co-label{font-weight:600;font-size:13.5px}
+.chk-overall .co-sub{font-size:12px;color:var(--text-3)}
+
+/* Item CP: [carga] [check] nombre  ...badges */
+.cp-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 6px;border-bottom:1px solid var(--border);
+  transition:background .12s;
+}
+.cp-item:last-child{border-bottom:none}
+.cp-item:hover{background:var(--surface-2)}
+.cp-item.done .cp-name{color:var(--text-3)}
+.cp-item.locked{opacity:.55}
+
+.upload-btn{
+  width:30px;height:30px;flex-shrink:0;border:none;border-radius:7px;
+  background:var(--primary);color:#fff;display:grid;place-items:center;
+  cursor:pointer;font-size:17px;transition:background .15s, transform .1s;
+}
+.upload-btn:hover{background:var(--primary-2)}
+.upload-btn:active{transform:scale(.94)}
+.upload-btn.uploaded{background:var(--ok)}
+.upload-btn.ph{background:transparent;pointer-events:none}
+
+.cp-name{font-size:13.5px;font-weight:500;flex:1;min-width:0;color:var(--text)}
+.cp-name .cp-id{color:var(--text-3);font-family:var(--font-mono);font-size:12.5px;margin-right:4px}
+.cp-tags{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.cp-lock-ico{color:var(--text-4);font-size:16px}
+
+.auto-run-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:var(--primary-50);border:1px solid var(--primary-100);
+  border-radius:var(--radius-lg);padding:14px 16px;margin:14px 0;
+}
+.auto-run-bar .arb-txt{font-size:12.5px;color:var(--text-2)}
+.auto-run-bar .arb-txt b{color:var(--text)}
+
+.prod-banner{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--ok-bg);border:1px solid #86efac;
+  border-radius:var(--radius-lg);padding:16px 18px;margin:18px 0 6px;
+}
+.prod-banner .pb-ico{font-size:28px;color:var(--ok)}
+.prod-banner b{color:#166534}
+.prod-banner small{color:#15803d;display:block;font-size:12px}
+
+.empty-state{
+  text-align:center;padding:60px 20px;color:var(--text-3);
+  background:var(--surface);border:1px dashed var(--border-2);border-radius:var(--radius-lg);
+}
+.empty-state i{font-size:44px;color:var(--text-4);display:block;margin-bottom:10px}
+
+/* ===========================================================
+   CONFIG TABS (ctab)
+   =========================================================== */
+.ctabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:18px;
+}
+.ctab{
+  display:flex;align-items:center;gap:7px;
+  padding:11px 16px;margin-right:6px;
+  font-size:13px;font-weight:600;color:var(--text-3);
+  border-bottom:2px solid transparent;cursor:pointer;
+  transition:color .15s, border-color .15s;
+}
+.ctab i{font-size:17px}
+.ctab:hover{color:var(--text)}
+.ctab.on{color:var(--primary);border-bottom-color:var(--primary)}
+
+/* ===========================================================
+   DEPLOY (Despliegue a producción)
+   =========================================================== */
+.dep-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.dep-check-row{
+  display:flex;align-items:center;gap:12px;padding:12px 6px;
+  border-bottom:1px solid var(--border);
+}
+.dep-check-row:last-child{border-bottom:none}
+.dep-check-row .dcr-ico{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:16px;flex-shrink:0;
+}
+.dcr-ico.ok{background:var(--ok-bg);color:var(--ok)}
+.dcr-ico.pend{background:var(--warn-bg);color:var(--warn)}
+.dep-check-row .dcr-name{flex:1;font-size:13.5px;font-weight:500}
+.dep-deploy-btn{
+  width:100%;justify-content:center;padding:14px;font-size:14.5px;font-weight:600;
+}
+.dep-log{
+  font-family:var(--font-mono);font-size:12px;line-height:1.9;
+  background:var(--sidebar);color:var(--sidebar-text);
+  border-radius:var(--radius);padding:16px 18px;margin-top:14px;
+  max-height:280px;overflow:auto;
+}
+.dep-log .dl-line{display:flex;gap:8px;align-items:baseline}
+.dep-log .dl-ok{color:#4ade80}
+.dep-log .dl-run{color:#fbbf24}
+.dep-log .dl-t{color:var(--sidebar-text-2)}
+
+/* ===========================================================
    KANBAN
    =========================================================== */
 .kanban{
@@ -1092,9 +1212,8 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
       <div class="nav-item active" data-view="dashboard"><i class="mdi mdi-view-dashboard-outline"></i><span>Dashboard</span></div>
       <div class="nav-item" data-view="tasks"><i class="mdi mdi-clipboard-text-multiple-outline"></i><span>Tareas de desarrollo</span><span class="nav-badge">7</span></div>
       <div class="nav-item" data-view="checklist"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>Lista de chequeo</span></div>
+      <div class="nav-item" data-view="deploy"><i class="mdi mdi-rocket-launch-outline"></i><span>Despliegue a producción</span></div>
       <div class="nav-item" data-view="support"><i class="mdi mdi-lifebuoy"></i><span>Casos de soporte</span><span class="nav-badge">3</span></div>
-      <div class="nav-item" data-view="kanban"><i class="mdi mdi-view-column-outline"></i><span>Kanban</span></div>
-      <div class="nav-item" data-view="calendar"><i class="mdi mdi-calendar-month-outline"></i><span>Calendario</span></div>
 
       <div class="nav-section">Configuración</div>
       <div class="nav-item" data-view="params"><i class="mdi mdi-tune-vertical"></i><span>Parámetros</span></div>
@@ -1389,42 +1508,37 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
         <div class="page-head">
           <div>
             <h1 class="page-title">Lista de chequeo</h1>
-            <p class="page-sub">Control de calidad por etapas · Trazabilidad completa del flujo</p>
+            <p class="page-sub">Diligencia los CP manuales para habilitar la ejecución de los CP automáticos</p>
           </div>
           <div class="page-actions">
             <button class="btn"><i class="mdi mdi-file-export-outline"></i>Exportar PDF</button>
-            <button class="btn btn-primary" onclick="toast('Nuevo checklist creado','ok','Listo para diligenciar.')"><i class="mdi mdi-plus"></i>Crear checklist</button>
           </div>
         </div>
 
+        <!-- Selector de cliente / producto / requerimiento -->
         <div class="filters-bar">
           <div class="filter-group">
-            <div class="label">Cliente</div>
-            <select class="select"><option>Todos</option><option>Cliente XYZ</option><option>Banco Andino</option><option>DIAN</option></select>
+            <div class="label">Seleccionar el cliente</div>
+            <select class="select" id="chkCliente" onchange="onClienteChange()"></select>
           </div>
           <div class="filter-group">
-            <div class="label">Producto</div>
-            <select class="select"><option>Todos</option><option>Gateway</option><option>Efactura</option><option>DCOP</option></select>
+            <div class="label">Seleccionar el producto</div>
+            <select class="select" id="chkProducto" onchange="onProductoChange()"></select>
           </div>
           <div class="filter-group">
-            <div class="label">Tipo</div>
-            <select class="select"><option>Todos</option><option>FORE</option><option>RECA</option><option>MIG</option></select>
-          </div>
-          <div class="filter-group">
-            <div class="label">Estado</div>
-            <select class="select"><option>Todos</option><option>Pendiente</option><option>En proceso</option><option>Completado</option><option>Bloqueado</option></select>
-          </div>
-          <div class="filter-group">
-            <div class="label">Responsable</div>
-            <select class="select"><option>Todos</option><option>Jhon Carvajal</option><option>Maria López</option><option>Ana Vega</option></select>
+            <div class="label">Seleccionar FORE-RECA</div>
+            <select class="select" id="chkReq" onchange="onReqChange()"></select>
           </div>
           <div class="filter-actions">
-            <button class="btn btn-primary"><i class="mdi mdi-magnify"></i>Buscar</button>
-            <button class="btn"><i class="mdi mdi-refresh"></i>Limpiar</button>
+            <button class="btn btn-primary" onclick="loadChecklist()" title="Cargar lista de chequeo"><i class="mdi mdi-check"></i></button>
+            <label class="mine-toggle" title="Mostrar solo los checklist asignados a mí">
+              <span class="switch" id="mineSwitch" onclick="toggleMine(this)"></span>
+              <span>Solo mis CP</span>
+            </label>
           </div>
         </div>
 
-        <div class="accordion" id="checklistAcc"></div>
+        <div id="checklistArea"></div>
       </section>
 
       <!-- ===================================================
@@ -1470,58 +1584,35 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
       </section>
 
       <!-- ===================================================
-           KANBAN VIEW
+           DEPLOY VIEW  (Despliegue a producción)
            =================================================== -->
-      <section class="view" id="view-kanban">
+      <section class="view" id="view-deploy">
         <div class="page-head">
           <div>
-            <h1 class="page-title">Vista Kanban</h1>
-            <p class="page-sub">Arrastra las tarjetas entre columnas para cambiar el estado</p>
-          </div>
-          <div class="page-actions">
-            <button class="btn"><i class="mdi mdi-filter-variant"></i>Filtros</button>
-            <button class="btn btn-primary"><i class="mdi mdi-plus"></i>Nueva</button>
-          </div>
-        </div>
-        <div class="kanban" id="kanbanBoard"></div>
-      </section>
-
-      <!-- ===================================================
-           CALENDAR VIEW
-           =================================================== -->
-      <section class="view" id="view-calendar">
-        <div class="page-head">
-          <div>
-            <h1 class="page-title">Calendario de entregas</h1>
-            <p class="page-sub">Mayo 2026 · Vista mensual</p>
-          </div>
-          <div class="page-actions">
-            <button class="btn btn-icon-only"><i class="mdi mdi-chevron-left"></i></button>
-            <button class="btn">Hoy</button>
-            <button class="btn btn-icon-only"><i class="mdi mdi-chevron-right"></i></button>
-            <button class="btn btn-primary"><i class="mdi mdi-plus"></i>Evento</button>
+            <h1 class="page-title">Despliegue a producción</h1>
+            <p class="page-sub">Envía la configuración a producción · Solo disponible cuando todos los checklist estén completados</p>
           </div>
         </div>
 
-        <div class="dash-grid">
-          <div class="card">
-            <div class="card-head"><h3>Mayo 2026</h3></div>
-            <div class="card-body">
-              <div class="cal" id="cal"></div>
-            </div>
+        <div class="filters-bar">
+          <div class="filter-group">
+            <div class="label">Seleccionar el cliente</div>
+            <select class="select" id="depCliente" onchange="onDepClienteChange()"></select>
           </div>
-          <div class="card">
-            <div class="card-head"><h3>Próximas entregas</h3></div>
-            <div class="card-body">
-              <div class="feed">
-                <div class="feed-item"><div class="feed-ico" style="background:var(--primary-50);color:var(--primary)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>FORE-014</b> · Integración DIAN v2</p><small>17 May · 2 días restantes</small></div></div>
-                <div class="feed-item"><div class="feed-ico" style="background:var(--warn-bg);color:var(--warn)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>RECA-022</b> · Gateway API</p><small>20 May · 5 días restantes</small></div></div>
-                <div class="feed-item"><div class="feed-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>MIG-003</b> · Migración Colfondos</p><small>24 May · 9 días restantes</small></div></div>
-                <div class="feed-item"><div class="feed-ico" style="background:var(--purple-bg);color:var(--purple)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>FORE-017</b> · WSSE Signatures</p><small>28 May · 13 días restantes</small></div></div>
-              </div>
-            </div>
+          <div class="filter-group">
+            <div class="label">Seleccionar el producto</div>
+            <select class="select" id="depProducto" onchange="onDepProductoChange()"></select>
+          </div>
+          <div class="filter-group">
+            <div class="label">Seleccionar FORE-RECA</div>
+            <select class="select" id="depReq" onchange="renderDeploy()"></select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-primary" onclick="renderDeploy()" title="Consultar estado"><i class="mdi mdi-refresh"></i></button>
           </div>
         </div>
+
+        <div id="deployArea"></div>
       </section>
 
       <!-- ===================================================
@@ -1565,32 +1656,87 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
           </div>
         </div>
 
-        <div class="card" style="margin-bottom:18px">
-          <div class="card-head"><h3>Cliente activo</h3></div>
-          <div class="card-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-              <div><div class="label">Cliente</div><select class="select"><option>Cliente XYZ S.A.S.</option><option>Banco Andino</option><option>DIAN</option></select></div>
-              <div><div class="label">Producto</div><select class="select"><option>Gateway</option><option>Efactura</option><option>DCOP</option></select></div>
-              <div><div class="label">Ambiente</div><select class="select"><option>Producción</option><option>Staging</option><option>Desarrollo</option></select></div>
-            </div>
-          </div>
+        <!-- Tabs de configuración -->
+        <div class="ctabs">
+          <div class="ctab on" data-ctab="ajustes" onclick="switchCtab(this)"><i class="mdi mdi-cog-outline"></i> Ajustes generales</div>
+          <div class="ctab" data-ctab="cps" onclick="switchCtab(this)"><i class="mdi mdi-clipboard-list-outline"></i> CP · Lista de chequeo</div>
         </div>
 
-        <div class="card" style="margin-bottom:18px">
-          <div class="card-head"><h3>Canales habilitados</h3><small style="color:var(--text-3);font-size:12px">Selecciona los canales de salida</small></div>
-          <div class="card-body">
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="chip on"><i class="mdi mdi-printer"></i> PE</button>
-              <button class="chip on"><i class="mdi mdi-email-outline"></i> EN</button>
-              <button class="chip"><i class="mdi mdi-printer-3d"></i> IMP</button>
-              <button class="chip on"><i class="mdi mdi-monitor"></i> DIG</button>
-              <button class="chip"><i class="mdi mdi-message-text-outline"></i> SMS</button>
-              <button class="chip"><i class="mdi mdi-file-document-outline"></i> DEE</button>
+        <!-- PANE: Ajustes generales -->
+        <div class="cpane" data-cpane="ajustes">
+          <div class="card" style="margin-bottom:18px">
+            <div class="card-head"><h3>Cliente activo</h3></div>
+            <div class="card-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+                <div><div class="label">Cliente</div><select class="select"><option>Cliente XYZ S.A.S.</option><option>Banco Andino</option><option>DIAN</option></select></div>
+                <div><div class="label">Producto</div><select class="select"><option>Gateway</option><option>Efactura</option><option>DCOP</option></select></div>
+                <div><div class="label">Ambiente</div><select class="select"><option>Producción</option><option>Staging</option><option>Desarrollo</option></select></div>
+              </div>
             </div>
           </div>
+
+          <div class="card" style="margin-bottom:18px">
+            <div class="card-head"><h3>Canales habilitados</h3><small style="color:var(--text-3);font-size:12px">Selecciona los canales de salida</small></div>
+            <div class="card-body">
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="chip on"><i class="mdi mdi-printer"></i> PE</button>
+                <button class="chip on"><i class="mdi mdi-email-outline"></i> EN</button>
+                <button class="chip"><i class="mdi mdi-printer-3d"></i> IMP</button>
+                <button class="chip on"><i class="mdi mdi-monitor"></i> DIG</button>
+                <button class="chip"><i class="mdi mdi-message-text-outline"></i> SMS</button>
+                <button class="chip"><i class="mdi mdi-file-document-outline"></i> DEE</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion" id="configAcc"></div>
         </div>
 
-        <div class="accordion" id="configAcc"></div>
+        <!-- PANE: CP · Lista de chequeo -->
+        <div class="cpane" data-cpane="cps" style="display:none">
+          <div class="card" style="margin-bottom:18px">
+            <div class="card-head">
+              <h3>Agregar CP a la lista de chequeo</h3>
+              <small style="color:var(--text-3);font-size:12px">Define un nuevo caso de prueba y a qué lista pertenece</small>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div>
+                  <div class="label">Tipo de lista de chequeo</div>
+                  <select class="select" id="cpTipo"></select>
+                </div>
+                <div>
+                  <div class="label">Modo de ejecución</div>
+                  <select class="select" id="cpModo">
+                    <option value="manual">Manual</option>
+                    <option value="auto">Automático</option>
+                  </select>
+                </div>
+                <div class="span-2">
+                  <div class="label">Nombre del CP</div>
+                  <input class="input" id="cpNombre" placeholder="EJ: Configuracion de recursos en los servidores" />
+                </div>
+                <div>
+                  <div class="label">Asignado a</div>
+                  <select class="select" id="cpAsignado"></select>
+                </div>
+                <div>
+                  <div class="label">Requiere carga de archivo</div>
+                  <label class="mine-toggle" style="height:38px">
+                    <span class="switch on" id="cpCarga" onclick="this.classList.toggle('on')"></span>
+                    <span>Habilitar botón de carga</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot" style="border-top:1px solid var(--border)">
+              <button class="btn" onclick="clearCpForm()">Limpiar</button>
+              <button class="btn btn-primary" onclick="addCp()"><i class="mdi mdi-plus"></i>Agregar CP</button>
+            </div>
+          </div>
+
+          <div class="accordion" id="cpConfigAcc"></div>
+        </div>
       </section>
 
       <!-- ===================================================
@@ -2015,45 +2161,118 @@ const INTEGRATIONS = [
   {n:'Slack',d:'Notificaciones alternativas',ico:'mdi-slack',color:'#4a154b',on:false},
 ];
 
-const CHECKLIST_GROUPS = [
-  {title:'Checklist General',icon:'clipboard-outline',color:'var(--text-3)',items:[
-    {n:'Verificar alcance del requerimiento',done:true,who:'AV',date:'02 May',pri:'Alta'},
-    {n:'Validar disponibilidad de stakeholders',done:true,who:'AV',date:'02 May',pri:'Media'},
-    {n:'Confirmar prioridad con cliente',done:true,who:'AV',date:'03 May',pri:'Alta'},
-    {n:'Documentar contexto inicial',done:false,who:'JM',date:'04 May',pri:'Media'},
+/* ================================================================
+   DATA · Configuración completa para el demo funcional
+   (equivalente al archivo configurator-data.json del repositorio)
+   ================================================================ */
+
+// Usuario autenticado (solo se muestran los CP asignados a él)
+const CURRENT_USER = 'jhon';
+
+const USERS = [
+  {id:'jhon',   nombre:'Jhon Carvajal', ini:'JC', rol:'Desarrollador'},
+  {id:'maria',  nombre:'Maria López',   ini:'ML', rol:'Calidad'},
+  {id:'ana',    nombre:'Ana Vega',      ini:'AV', rol:'Funcional'},
+];
+
+// Tipos de lista de chequeo (generales + un tipo por canal)
+const CHK_TIPOS = [
+  {key:'generales', label:'Checklist generales', canal:null,  icon:'clipboard-outline',       color:'var(--text-3)'},
+  {key:'PE',        label:'Checklist PE',         canal:'PE',  icon:'printer',                 color:'var(--primary)'},
+  {key:'EN',        label:'Checklist EN',         canal:'EN',  icon:'email-outline',           color:'var(--info)'},
+  {key:'IMP',       label:'Checklist IMP',        canal:'IMP', icon:'printer-3d',              color:'var(--purple)'},
+  {key:'DIG',       label:'Checklist DIG',        canal:'DIG', icon:'monitor',                 color:'var(--accent)'},
+  {key:'SMS',       label:'Checklist SMS',        canal:'SMS', icon:'message-text-outline',    color:'var(--warn)'},
+];
+
+// Clientes → productos → requerimientos (FORE/RECA)
+const CLIENTES = [
+  {id:'0005_CanalSMS', nombre:'0005_CanalSMS', productos:[
+    {id:'CanalSMS', nombre:'CanalSMS', canales:['PE','EN','IMP','DIG','SMS'], requerimientos:[
+      {id:'FORE-001', tipo:'FORE', desc:'Configuración inicial CanalSMS'},
+      {id:'FORE-014', tipo:'FORE', desc:'Integración DIAN electrónica v2'},
+      {id:'RECA-022', tipo:'RECA', desc:'Gateway API · refactor SQS'},
+    ]},
   ]},
-  {title:'Checklist Funcional',icon:'account-tie-outline',color:'var(--primary)',items:[
-    {n:'Diagrama de flujo aprobado por cliente',done:true,who:'AV',date:'03 May',pri:'Alta'},
-    {n:'Mock-ups validados',done:true,who:'AV',date:'03 May',pri:'Media'},
-    {n:'Documento FORE diligenciado completamente',done:true,who:'AV',date:'04 May',pri:'Alta'},
-    {n:'Criterios de aceptación definidos',done:false,who:'AV',date:'04 May',pri:'Crítica'},
-    {n:'Casos de prueba funcionales documentados',done:false,who:'AV',date:'05 May',pri:'Alta'},
+  {id:'0012_BancoAndino', nombre:'0012_BancoAndino', productos:[
+    {id:'Extractos', nombre:'Extractos', canales:['PE','EN','IMP'], requerimientos:[
+      {id:'FORE-030', tipo:'FORE', desc:'Extractos mensuales PE/EN'},
+      {id:'RECA-011', tipo:'RECA', desc:'Ajuste plantilla email'},
+    ]},
+    {id:'Certificados', nombre:'Certificados', canales:['EN','DIG'], requerimientos:[
+      {id:'FORE-041', tipo:'FORE', desc:'Certificados tributarios digitales'},
+    ]},
   ]},
-  {title:'Checklist Desarrollo',icon:'code-tags',color:'var(--purple)',items:[
-    {n:'Branch creado desde develop',done:true,who:'JM',date:'05 May',pri:'Baja'},
-    {n:'Tests unitarios cobertura > 80%',done:false,who:'JM',date:'10 May',pri:'Alta'},
-    {n:'Code review aprobado',done:false,who:'CR',date:'12 May',pri:'Alta'},
-    {n:'Documentación técnica actualizada',done:false,who:'JM',date:'14 May',pri:'Media'},
-    {n:'Linters y formateo aplicados',done:false,who:'JM',date:'15 May',pri:'Baja'},
-  ]},
-  {title:'Checklist Calidad',icon:'flask-outline',color:'var(--warn)',items:[
-    {n:'Plan de pruebas ejecutado',done:false,who:'ML',date:'16 May',pri:'Alta'},
-    {n:'Pruebas de regresión completadas',done:false,who:'ML',date:'17 May',pri:'Alta'},
-    {n:'Pruebas de carga validadas',done:false,who:'ML',date:'17 May',pri:'Media'},
-    {n:'Reporte QA generado y firmado',done:false,who:'ML',date:'18 May',pri:'Alta'},
-  ]},
-  {title:'Checklist Producción',icon:'rocket-launch-outline',color:'var(--ok)',items:[
-    {n:'Backup pre-deploy realizado',done:false,who:'JM',date:'20 May',pri:'Crítica'},
-    {n:'Variables de entorno verificadas',done:false,who:'JM',date:'20 May',pri:'Crítica'},
-    {n:'Rollback plan documentado',done:false,who:'JM',date:'20 May',pri:'Alta'},
-    {n:'Monitoreo CloudWatch configurado',done:false,who:'JM',date:'20 May',pri:'Alta'},
-  ]},
-  {title:'Checklist Soporte',icon:'lifebuoy',color:'var(--info)',items:[
-    {n:'Documentación operativa entregada',done:false,who:'JM',date:'21 May',pri:'Alta'},
-    {n:'Capacitación a equipo soporte',done:false,who:'JM',date:'22 May',pri:'Media'},
-    {n:'Runbook de incidentes creado',done:false,who:'JM',date:'22 May',pri:'Alta'},
+  {id:'0020_DIAN', nombre:'0020_DIAN', productos:[
+    {id:'Facturacion', nombre:'Facturación', canales:['IMP','EN'], requerimientos:[
+      {id:'FORE-050', tipo:'FORE', desc:'Facturación electrónica masiva'},
+    ]},
   ]},
 ];
+
+// Catálogo de CP (casos de prueba). Cada CP pertenece a un tipo de checklist,
+// tiene un modo (auto/manual), puede requerir carga de archivo y está asignado
+// a un usuario/rol. "canal" null = aplica a todos (generales).
+let CP_CATALOG = [
+  // ---- Generales ----
+  {id:'G-001', tipo:'generales', modo:'auto',   nombre:'Configuracion de recursos en los servidores', carga:true,  asignadoA:'jhon'},
+  {id:'G-002', tipo:'generales', modo:'auto',   nombre:'Muestras Selectivas',                          carga:true,  asignadoA:'jhon'},
+  {id:'G-003', tipo:'generales', modo:'auto',   nombre:'Genera guias printnet',                        carga:true,  asignadoA:'jhon'},
+  {id:'G-004', tipo:'generales', modo:'manual', nombre:'Configuracion de recursos en los servidores',  carga:true,  asignadoA:'jhon'},
+  {id:'G-005', tipo:'generales', modo:'manual', nombre:'Muestras Selectivas',                          carga:true,  asignadoA:'jhon'},
+  {id:'G-006', tipo:'generales', modo:'manual', nombre:'Genera guias printnet',                        carga:true,  asignadoA:'jhon'},
+  // ---- PE ----
+  {id:'PE-001', tipo:'PE', modo:'manual', nombre:'Carga de PDF individuales a PE',      carga:true,  asignadoA:'jhon'},
+  {id:'PE-002', tipo:'PE', modo:'manual', nombre:'Validar detalle de producto en PE',   carga:false, asignadoA:'jhon'},
+  {id:'PE-003', tipo:'PE', modo:'auto',   nombre:'Genera y carga muestras PE',          carga:true,  asignadoA:'jhon'},
+  // ---- EN ----
+  {id:'EN-001', tipo:'EN', modo:'manual', nombre:'Validar plantilla de email',          carga:true,  asignadoA:'jhon'},
+  {id:'EN-002', tipo:'EN', modo:'manual', nombre:'Correo de aprobación (setting 9)',    carga:false, asignadoA:'ana'},
+  {id:'EN-003', tipo:'EN', modo:'auto',   nombre:'Envío de muestras email',             carga:false, asignadoA:'jhon'},
+  // ---- IMP ----
+  {id:'IMP-001', tipo:'IMP', modo:'manual', nombre:'Validar sheetname / job split',     carga:true,  asignadoA:'jhon'},
+  {id:'IMP-002', tipo:'IMP', modo:'manual', nombre:'Generar archivo de detalles',       carga:true,  asignadoA:'jhon'},
+  {id:'IMP-003', tipo:'IMP', modo:'auto',   nombre:'Genera archivos de impresión (WFD)',carga:true,  asignadoA:'jhon'},
+  // ---- DIG ----
+  {id:'DIG-001', tipo:'DIG', modo:'manual', nombre:'Validar canal digital',             carga:false, asignadoA:'jhon'},
+  {id:'DIG-002', tipo:'DIG', modo:'auto',   nombre:'Publicación en portal digital',     carga:false, asignadoA:'jhon'},
+  // ---- SMS ----
+  {id:'SMS-001', tipo:'SMS', modo:'manual', nombre:'Validar mensaje de texto',          carga:false, asignadoA:'jhon'},
+  {id:'SMS-002', tipo:'SMS', modo:'manual', nombre:'Validar URL variable',              carga:false, asignadoA:'jhon'},
+  {id:'SMS-003', tipo:'SMS', modo:'auto',   nombre:'Envío de muestras SMS',             carga:false, asignadoA:'jhon'},
+];
+
+/* ---------------- Estado en memoria del checklist ----------------
+   La clave es `${reqId}::${cpId}` → {checked, uploaded} */
+const cpState = {};
+function cpKey(reqId, cpId){ return reqId + '::' + cpId; }
+function getCp(reqId, cpId){
+  const k = cpKey(reqId, cpId);
+  if(!cpState[k]) cpState[k] = {checked:false, uploaded:false};
+  return cpState[k];
+}
+
+// Selección activa (compartida entre Lista de chequeo y Despliegue)
+let sel = {clienteId:null, productoId:null, reqId:null};
+let onlyMine = true;
+
+/* ---------------- Helpers de datos ---------------- */
+function getCliente(id){ return CLIENTES.find(c=>c.id===id); }
+function getProducto(cli, id){ return cli ? cli.productos.find(p=>p.id===id) : null; }
+function userIni(id){ const u=USERS.find(x=>x.id===id); return u?u.ini:'??'; }
+function userName(id){ const u=USERS.find(x=>x.id===id); return u?u.nombre:id; }
+
+// CP aplicables al producto seleccionado (por canal), opcionalmente solo del usuario
+function cpsForContext(producto, {mine=onlyMine}={}){
+  if(!producto) return [];
+  return CP_CATALOG.filter(cp=>{
+    const t = CHK_TIPOS.find(t=>t.key===cp.tipo);
+    // generales aplican siempre; los de canal solo si el producto tiene ese canal
+    if(t && t.canal && !producto.canales.includes(t.canal)) return false;
+    if(mine && cp.asignadoA !== CURRENT_USER) return false;
+    return true;
+  });
+}
 
 const CONFIG_SECTIONS = [
   {title:'Generales',icon:'cog-outline',items:[
@@ -2200,114 +2419,237 @@ function renderParams(){
   `).join('');
 }
 
-/* CHECKLIST */
-function renderChecklists(){
-  const el = document.getElementById('checklistAcc');
-  el.innerHTML = CHECKLIST_GROUPS.map((g,gi)=>{
-    const total=g.items.length;
-    const done=g.items.filter(i=>i.done).length;
-    const pct=Math.round(done/total*100);
-    return `<div class="acc ${gi===1?'open':''}">
-      <div class="acc-head" onclick="toggleAcc(this)">
-        <i class="mdi mdi-chevron-right acc-chev"></i>
-        <i class="mdi mdi-${g.icon}" style="color:${g.color};font-size:20px"></i>
-        <div class="acc-title">${g.title}</div>
-        <div class="acc-meta">
-          <span class="acc-progress">${done}/${total}</span>
-          <div class="progress" style="width:80px"><i style="width:${pct}%"></i></div>
-          ${pct===100?'<span class="badge b-ok b-dot">Completo</span>':''}
-        </div>
-      </div>
-      <div class="acc-body">
-        <div class="acc-body-inner">
-          ${g.items.map((it,ii)=>`
-            <div class="checklist-item ${it.done?'done':''}">
-              <div class="check ${it.done?'on':''}" onclick="toggleCheck(this,${gi},${ii})"></div>
-              <div class="check-name">${it.n}</div>
-              <span class="pri pri-${it.pri==='Crítica'?'crit':it.pri==='Alta'?'high':it.pri==='Media'?'med':'low'}">${it.pri.toUpperCase()}</span>
-              <div class="mini-avatar" style="background:${avatarBg(it.who)}" title="${it.who}">${it.who}</div>
-              <div class="check-meta"><i class="mdi mdi-calendar-blank-outline"></i>${it.date}</div>
-              <div class="row-actions">
-                <button class="icon-btn" title="Adjuntar"><i class="mdi mdi-paperclip"></i></button>
-                <button class="icon-btn" title="Comentar"><i class="mdi mdi-comment-text-outline"></i></button>
-              </div>
-            </div>
-          `).join('')}
-          <button class="btn btn-ghost btn-sm" style="margin-top:8px"><i class="mdi mdi-plus"></i>Agregar item</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
 function toggleAcc(el){
   const acc = el.parentElement;
   acc.classList.toggle('open');
 }
 
-function toggleCheck(el,gi,ii){
-  CHECKLIST_GROUPS[gi].items[ii].done = !CHECKLIST_GROUPS[gi].items[ii].done;
-  el.classList.toggle('on');
-  el.parentElement.classList.toggle('done');
+/* ================================================================
+   LISTA DE CHEQUEO  (vista principal según Checklist.png)
+   ================================================================ */
 
-  const done = CHECKLIST_GROUPS[gi].items.filter(x=>x.done).length;
-  const total = CHECKLIST_GROUPS[gi].items.length;
+/* --- Selectores encadenados cliente → producto → requerimiento --- */
+function fillClienteSelect(selectEl){
+  selectEl.innerHTML = CLIENTES.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+}
+function fillProductoSelect(selectEl, cli){
+  selectEl.innerHTML = cli.productos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+}
+function fillReqSelect(selectEl, prod){
+  selectEl.innerHTML = prod.requerimientos.map(r=>`<option value="${r.id}">${r.id} · ${r.desc}</option>`).join('');
+}
 
-  if(CHECKLIST_GROUPS[gi].items[ii].done){
-    toast(`${CHECKLIST_GROUPS[gi].title}`,'ok',`Item completado · ${done}/${total} listos.`);
-    if(done===total){
-      setTimeout(()=>{
-        toast('¡Checklist completado!','ok',`${CHECKLIST_GROUPS[gi].title} al 100%. Habilitando siguiente etapa.`);
-        emailPop('siguiente-responsable@cadena.com.co','Checklist completado · próxima etapa habilitada');
-      },800);
-    }
-  }
+function initChecklistSelectors(){
+  const cliSel = document.getElementById('chkCliente');
+  fillClienteSelect(cliSel);
+  const cli = CLIENTES[0];
+  sel.clienteId = cli.id;
+  fillProductoSelect(document.getElementById('chkProducto'), cli);
+  const prod = cli.productos[0];
+  sel.productoId = prod.id;
+  fillReqSelect(document.getElementById('chkReq'), prod);
+  sel.reqId = prod.requerimientos[0].id;
+  document.getElementById('mineSwitch').classList.toggle('on', onlyMine);
   renderChecklists();
-  // Re-open the same acc
-  setTimeout(()=>document.querySelectorAll('.acc')[gi]?.classList.add('open'),10);
 }
 
-/* KANBAN */
-function renderKanban(){
-  document.getElementById('kanbanBoard').innerHTML = KANBAN_COLS.map(c=>`
-    <div class="kan-col" data-col="${c.key}">
-      <div class="kan-col-head">
-        <div class="dot-c" style="background:${c.color}"></div>
-        ${c.label}
-        <span class="count">${c.tasks.length}</span>
-        <button class="icon-btn" style="margin-left:auto;width:24px;height:24px" title="Agregar"><i class="mdi mdi-plus" style="font-size:14px"></i></button>
+function onClienteChange(){
+  const cli = getCliente(document.getElementById('chkCliente').value);
+  sel.clienteId = cli.id;
+  fillProductoSelect(document.getElementById('chkProducto'), cli);
+  sel.productoId = cli.productos[0].id;
+  fillReqSelect(document.getElementById('chkReq'), cli.productos[0]);
+  sel.reqId = cli.productos[0].requerimientos[0].id;
+  renderChecklists();
+}
+function onProductoChange(){
+  const cli = getCliente(sel.clienteId);
+  const prod = getProducto(cli, document.getElementById('chkProducto').value);
+  sel.productoId = prod.id;
+  fillReqSelect(document.getElementById('chkReq'), prod);
+  sel.reqId = prod.requerimientos[0].id;
+  renderChecklists();
+}
+function onReqChange(){
+  sel.reqId = document.getElementById('chkReq').value;
+  renderChecklists();
+}
+function loadChecklist(){
+  renderChecklists();
+  toast('Lista de chequeo cargada','ok',`${sel.reqId} · ${getProducto(getCliente(sel.clienteId),sel.productoId).nombre}`);
+}
+function toggleMine(el){
+  onlyMine = !onlyMine;
+  el.classList.toggle('on', onlyMine);
+  renderChecklists();
+}
+
+/* --- Estados de compleción --- */
+function manualDone(prod, reqId){
+  const manual = cpsForContext(prod).filter(cp=>cp.modo==='manual');
+  return manual.length>0 && manual.every(cp=>getCp(reqId,cp.id).checked);
+}
+function allDone(prod, reqId){
+  const all = cpsForContext(prod);
+  return all.length>0 && all.every(cp=>getCp(reqId,cp.id).checked);
+}
+
+/* --- Render de un grupo (acordeón por tipo de checklist) --- */
+function renderCpGroup(prod, reqId, tipo, modo, locked){
+  const items = cpsForContext(prod).filter(cp=>cp.tipo===tipo.key && cp.modo===modo);
+  if(items.length===0) return '';
+  const done = items.filter(cp=>getCp(reqId,cp.id).checked).length;
+  const pct = Math.round(done/items.length*100);
+  const openCls = tipo.key==='generales' ? 'open' : '';
+  return `<div class="acc ${openCls}">
+    <div class="acc-head" onclick="toggleAcc(this)">
+      <i class="mdi mdi-chevron-right acc-chev"></i>
+      <i class="mdi mdi-${tipo.icon}" style="color:${tipo.color};font-size:20px"></i>
+      <div class="acc-title">${tipo.label}</div>
+      <div class="acc-meta">
+        <span class="acc-progress">${done}/${items.length}</span>
+        <div class="progress" style="width:80px"><i style="width:${pct}%"></i></div>
+        ${pct===100?'<span class="badge b-ok b-dot">Completo</span>':''}
       </div>
-      ${c.tasks.map(t=>`
-        <div class="kan-card" draggable="true">
-          <div class="kan-card-top">
-            <span class="id-pill">${t.id}</span>
-            <span class="pri ${t.pri}">${t.pri==='pri-low'?'BAJA':t.pri==='pri-med'?'MEDIA':t.pri==='pri-high'?'ALTA':'CRÍTICA'}</span>
-          </div>
-          <h4>${t.name}</h4>
-          <div class="kan-card-foot">
-            <div class="mini-avatar" style="background:${avatarBg(t.resp)}">${t.resp}</div>
-            <span><i class="mdi mdi-paperclip" style="font-size:13px"></i> 2 · <i class="mdi mdi-comment-text" style="font-size:13px"></i> 5</span>
-          </div>
-        </div>
-      `).join('')}
     </div>
-  `).join('');
+    <div class="acc-body"><div class="acc-body-inner">
+      ${items.map(cp=>{
+        const st = getCp(reqId,cp.id);
+        const isLocked = locked && !st.checked;
+        return `<div class="cp-item ${st.checked?'done':''} ${isLocked?'locked':''}">
+          ${cp.carga
+            ? `<button class="upload-btn ${st.uploaded?'uploaded':''}" title="${st.uploaded?'Archivo cargado':'Cargar archivo'}" onclick="uploadCp('${reqId}','${cp.id}',this)"><i class="mdi mdi-${st.uploaded?'check':'upload'}"></i></button>`
+            : `<span class="upload-btn ph"></span>`}
+          <div class="check ${st.checked?'on':''}" ${modo==='manual'?`onclick="toggleCp('${reqId}','${cp.id}','${modo}')"`:'title="Se marca al ejecutar los CP automáticos"'}></div>
+          <div class="cp-name"><span class="cp-id">${cp.id}</span>${cp.nombre}</div>
+          <div class="cp-tags">
+            ${cp.modo==='auto'?'<span class="badge b-purple b-dot">AUTO</span>':'<span class="badge b-info b-dot">MANUAL</span>'}
+            <div class="mini-avatar" style="background:${avatarBg(userIni(cp.asignadoA))}" title="${userName(cp.asignadoA)}">${userIni(cp.asignadoA)}</div>
+            ${isLocked?'<i class="mdi mdi-lock-outline cp-lock-ico" title="Completa primero los CP manuales"></i>':''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div></div>
+  </div>`;
 }
 
-/* CALENDAR */
-function renderCal(){
-  // May 2026: 1 May = Friday (col index 4)
-  const days=['L','M','M','J','V','S','D'];
-  let html = days.map(d=>`<div class="cal-h">${d}</div>`).join('');
-  // May 1 2026 is Friday (Monday-first index = 4)
-  for(let i=0;i<4;i++) html += `<div class="cal-d off">${27+i}</div>`;
-  const events = {3:1,7:1,12:1,15:1,17:1,20:1,24:1,28:1};
-  for(let d=1;d<=31;d++){
-    const cls = d===15?'today':(events[d]?'has':'');
-    html += `<div class="cal-d ${cls}">${d}</div>`;
+function renderChecklists(){
+  const area = document.getElementById('checklistArea');
+  const cli = getCliente(sel.clienteId);
+  const prod = getProducto(cli, sel.productoId);
+  if(!prod){ area.innerHTML=''; return; }
+
+  const ctx = cpsForContext(prod);
+  if(ctx.length===0){
+    area.innerHTML = `<div class="empty-state"><i class="mdi mdi-clipboard-remove-outline"></i>
+      No hay CP asignados a ${onlyMine?userName(CURRENT_USER):'este producto'} para <b>${prod.nombre}</b>.</div>`;
+    return;
   }
-  for(let i=1;i<=7;i++) html += `<div class="cal-d off">${i}</div>`;
-  document.getElementById('cal').innerHTML = html;
+
+  const total = ctx.length;
+  const doneCount = ctx.filter(cp=>getCp(sel.reqId,cp.id).checked).length;
+  const pct = Math.round(doneCount/total*100);
+  const mDone = manualDone(prod, sel.reqId);
+  const complete = allDone(prod, sel.reqId);
+
+  // Barra de progreso global
+  let html = `<div class="chk-overall">
+    <div style="flex:1;min-width:180px">
+      <div class="co-label">${cli.nombre} · ${prod.nombre} · ${sel.reqId}</div>
+      <div class="co-sub">Canales del producto: ${prod.canales.join(', ')} · ${onlyMine?('Asignados a '+userName(CURRENT_USER)):'Todos los responsables'}</div>
+    </div>
+    <div class="progress-row" style="min-width:160px">
+      <span>${pct}%</span>
+      <div class="progress" style="flex:1"><i style="width:${pct}%"></i></div>
+    </div>
+    ${complete?'<span class="badge b-ok b-dot">Todos completados</span>':`<span class="badge">${doneCount}/${total} CP</span>`}
+  </div>`;
+
+  // ---- CP's manuales ----
+  const manualGroups = CHK_TIPOS.map(t=>renderCpGroup(prod, sel.reqId, t, 'manual', false)).join('');
+  if(manualGroups.trim()){
+    html += `<div class="chk-section-title"><span class="st-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-account-check-outline"></i></span>CP's manuales</div>
+      <div class="accordion">${manualGroups}</div>`;
+  }
+
+  // ---- CP's automáticos ----
+  const autoGroups = CHK_TIPOS.map(t=>renderCpGroup(prod, sel.reqId, t, 'auto', !mDone)).join('');
+  if(autoGroups.trim()){
+    html += `<div class="chk-section-title"><span class="st-ico" style="background:var(--purple-bg);color:var(--purple)"><i class="mdi mdi-robot-outline"></i></span>CP's automáticos</div>`;
+    html += `<div class="auto-run-bar">
+      <div class="arb-txt">${mDone
+        ? '<b>Listo.</b> Ya diligenciaste los CP manuales. Puedes ejecutar los CP automáticos.'
+        : '<b>Bloqueado.</b> Primero debes diligenciar todos los CP manuales para habilitar la ejecución.'}</div>
+      <button class="btn btn-primary" ${mDone?'':'disabled style="opacity:.5;cursor:not-allowed"'} onclick="runAutoCps()"><i class="mdi mdi-play"></i>Ejecutar CP automáticos</button>
+    </div>`;
+    html += `<div class="accordion">${autoGroups}</div>`;
+  }
+
+  // ---- Banner paso a producción ----
+  if(complete){
+    html += `<div class="prod-banner">
+      <i class="mdi mdi-check-decagram pb-ico"></i>
+      <div style="flex:1;min-width:180px"><b>¡Todos los checklist completados!</b><small>La configuración quedó habilitada para el despliegue a producción.</small></div>
+      <button class="btn btn-primary" onclick="goDeploy()"><i class="mdi mdi-rocket-launch-outline"></i>Ir a Despliegue a producción</button>
+    </div>`;
+  }
+
+  area.innerHTML = html;
+}
+
+/* --- Interacciones de CP --- */
+function uploadCp(reqId, cpId, btn){
+  const st = getCp(reqId, cpId);
+  st.uploaded = true;
+  btn.classList.add('uploaded');
+  btn.innerHTML = '<i class="mdi mdi-check"></i>';
+  toast('Archivo cargado','ok',`CP ${cpId} · evidencia adjuntada.`);
+}
+
+function toggleCp(reqId, cpId, modo){
+  const st = getCp(reqId, cpId);
+  const cp = CP_CATALOG.find(c=>c.id===cpId);
+  // Si requiere carga, exigir archivo antes de aprobar (solo manuales)
+  if(!st.checked && modo==='manual' && cp.carga && !st.uploaded){
+    toast('Falta la evidencia','warn',`Carga el archivo del CP ${cpId} antes de marcarlo.`);
+    return;
+  }
+  st.checked = !st.checked;
+  renderChecklists();
+  reopenAccsFor(cpId);
+}
+
+function runAutoCps(){
+  const prod = getProducto(getCliente(sel.clienteId), sel.productoId);
+  if(!manualDone(prod, sel.reqId)){
+    toast('CP manuales pendientes','warn','Debes completar los CP manuales primero.');
+    return;
+  }
+  const autos = cpsForContext(prod).filter(cp=>cp.modo==='auto');
+  toast('Ejecutando CP automáticos','info',`Corriendo ${autos.length} casos automáticos...`);
+  autos.forEach((cp,i)=>{
+    setTimeout(()=>{
+      const st = getCp(sel.reqId, cp.id);
+      st.checked = true; st.uploaded = st.uploaded || cp.carga;
+      renderChecklists();
+      if(i===autos.length-1){
+        setTimeout(()=>{
+          toast('CP automáticos completados','ok','Todos los casos automáticos pasaron correctamente.');
+          if(allDone(prod, sel.reqId)){
+            emailPop('calidad@cadena.com.co','Checklist completado · habilitado paso a producción',
+              `El requerimiento ${sel.reqId} completó todos los CP. Habilitado para despliegue.`);
+          }
+        }, 300);
+      }
+    }, 500*(i+1));
+  });
+}
+
+// Reabrir los acordeones abiertos tras un re-render (para no perder el scroll visual)
+function reopenAccsFor(){ /* los acordeones 'generales' quedan abiertos por defecto */ }
+
+function goDeploy(){
+  document.querySelector('.nav-item[data-view="deploy"]').click();
 }
 
 /* AUDIT */
@@ -2372,11 +2714,215 @@ function renderConfig(){
 }
 
 /* ================================================================
+   CONFIG · Tab de CP (agregar CP a la lista de chequeo)
+   ================================================================ */
+function switchCtab(el){
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  const key = el.dataset.ctab;
+  document.querySelectorAll('.cpane').forEach(p=>p.style.display = p.dataset.cpane===key?'block':'none');
+}
+
+function initCpForm(){
+  document.getElementById('cpTipo').innerHTML = CHK_TIPOS.map(t=>`<option value="${t.key}">${t.label}</option>`).join('');
+  document.getElementById('cpAsignado').innerHTML = USERS.map(u=>`<option value="${u.id}">${u.nombre} (${u.rol})</option>`).join('');
+}
+function clearCpForm(){
+  document.getElementById('cpNombre').value='';
+  document.getElementById('cpModo').value='manual';
+  document.getElementById('cpCarga').classList.add('on');
+}
+function addCp(){
+  const nombre = document.getElementById('cpNombre').value.trim();
+  if(!nombre){ toast('Falta el nombre','warn','Escribe el nombre del CP.'); return; }
+  const tipo = document.getElementById('cpTipo').value;
+  const modo = document.getElementById('cpModo').value;
+  const asignadoA = document.getElementById('cpAsignado').value;
+  const carga = document.getElementById('cpCarga').classList.contains('on');
+  // Genera un id incremental por tipo (G-, PE-, EN-...)
+  const prefix = tipo==='generales' ? 'G' : tipo;
+  const count = CP_CATALOG.filter(c=>c.tipo===tipo).length + 1;
+  const id = `${prefix}-${String(count).padStart(3,'0')}`;
+  CP_CATALOG.push({id, tipo, modo, nombre, carga, asignadoA});
+  toast('CP agregado','ok',`${id} · ${nombre} → ${CHK_TIPOS.find(t=>t.key===tipo).label}`);
+  clearCpForm();
+  renderCpConfig();
+  renderChecklists();
+}
+function removeCp(id){
+  CP_CATALOG = CP_CATALOG.filter(c=>c.id!==id);
+  toast('CP eliminado','info',`Se eliminó ${id} del catálogo.`);
+  renderCpConfig();
+  renderChecklists();
+}
+
+function renderCpConfig(){
+  const el = document.getElementById('cpConfigAcc');
+  el.innerHTML = CHK_TIPOS.map((t,i)=>{
+    const items = CP_CATALOG.filter(cp=>cp.tipo===t.key);
+    return `<div class="acc ${i===0?'open':''}">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <i class="mdi mdi-chevron-right acc-chev"></i>
+        <i class="mdi mdi-${t.icon}" style="color:${t.color};font-size:20px"></i>
+        <div class="acc-title">${t.label}</div>
+        <div class="acc-meta"><span class="acc-progress">${items.length} CP</span></div>
+      </div>
+      <div class="acc-body"><div class="acc-body-inner">
+        ${items.length===0 ? '<div style="padding:12px 6px;color:var(--text-3);font-size:13px">Sin CP configurados.</div>'
+          : items.map(cp=>`
+            <div class="cp-item">
+              <span class="cp-id" style="min-width:56px">${cp.id}</span>
+              <div class="cp-name">${cp.nombre}</div>
+              <div class="cp-tags">
+                ${cp.modo==='auto'?'<span class="badge b-purple b-dot">AUTO</span>':'<span class="badge b-info b-dot">MANUAL</span>'}
+                ${cp.carga?'<span class="badge"><i class="mdi mdi-paperclip"></i>Carga</span>':''}
+                <div class="mini-avatar" style="background:${avatarBg(userIni(cp.asignadoA))}" title="${userName(cp.asignadoA)}">${userIni(cp.asignadoA)}</div>
+                <button class="icon-btn" title="Eliminar CP" onclick="removeCp('${cp.id}')"><i class="mdi mdi-trash-can-outline"></i></button>
+              </div>
+            </div>`).join('')}
+      </div></div>
+    </div>`;
+  }).join('');
+}
+
+/* ================================================================
+   DESPLIEGUE A PRODUCCIÓN
+   ================================================================ */
+function initDeploySelectors(){
+  const cliSel = document.getElementById('depCliente');
+  fillClienteSelect(cliSel);
+  fillProductoSelect(document.getElementById('depProducto'), CLIENTES[0]);
+  fillReqSelect(document.getElementById('depReq'), CLIENTES[0].productos[0]);
+}
+function onDepClienteChange(){
+  const cli = getCliente(document.getElementById('depCliente').value);
+  fillProductoSelect(document.getElementById('depProducto'), cli);
+  fillReqSelect(document.getElementById('depReq'), cli.productos[0]);
+  renderDeploy();
+}
+function onDepProductoChange(){
+  const cli = getCliente(document.getElementById('depCliente').value);
+  const prod = getProducto(cli, document.getElementById('depProducto').value);
+  fillReqSelect(document.getElementById('depReq'), prod);
+  renderDeploy();
+}
+// Sincroniza los selectores de deploy con la selección activa (viene de checklist)
+function syncDeploySelectors(){
+  const cli = getCliente(sel.clienteId);
+  document.getElementById('depCliente').value = sel.clienteId;
+  fillProductoSelect(document.getElementById('depProducto'), cli);
+  document.getElementById('depProducto').value = sel.productoId;
+  const prod = getProducto(cli, sel.productoId);
+  fillReqSelect(document.getElementById('depReq'), prod);
+  document.getElementById('depReq').value = sel.reqId;
+}
+
+function renderDeploy(){
+  const area = document.getElementById('deployArea');
+  const cli = getCliente(document.getElementById('depCliente').value);
+  const prod = getProducto(cli, document.getElementById('depProducto').value);
+  const reqId = document.getElementById('depReq').value;
+  if(!prod){ area.innerHTML=''; return; }
+
+  // Estado por tipo de checklist (respeta el filtro "Solo mis CP" de la lista de chequeo)
+  const rows = CHK_TIPOS.map(t=>{
+    const items = cpsForContext(prod).filter(cp=>cp.tipo===t.key);
+    if(items.length===0) return null;
+    const done = items.filter(cp=>getCp(reqId,cp.id).checked).length;
+    const ok = done===items.length;
+    return `<div class="dep-check-row">
+      <span class="dcr-ico ${ok?'ok':'pend'}"><i class="mdi mdi-${ok?'check':'clock-outline'}"></i></span>
+      <span class="dcr-name">${t.label}</span>
+      <span class="badge ${ok?'b-ok b-dot':'b-warn b-dot'}">${done}/${items.length}${ok?' · OK':' · Pendiente'}</span>
+    </div>`;
+  }).filter(Boolean).join('');
+
+  const all = cpsForContext(prod);
+  const doneAll = all.filter(cp=>getCp(reqId,cp.id).checked).length;
+  const ready = all.length>0 && doneAll===all.length;
+
+  area.innerHTML = `
+    <div class="dep-grid">
+      <div class="card">
+        <div class="card-head">
+          <h3>Estado de la lista de chequeo</h3>
+          <span class="badge ${ready?'b-ok b-dot':'b-warn b-dot'}">${doneAll}/${all.length} CP · ${ready?'Completado':'Incompleto'}</span>
+        </div>
+        <div class="card-body" style="padding-top:6px">
+          ${rows || '<div style="color:var(--text-3);font-size:13px;padding:8px 0">Sin checklist para este producto.</div>'}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Enviar a producción</h3></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;line-height:1.6">
+            Al desplegar, el proceso ejecuta automáticamente: <b>querys a la base de datos</b>, actualización de
+            <b>recursos</b>, actualización del <b>WFD</b> y creación de cliente/producto en <b>NT</b>.
+            ${ready?'':'<br><span style="color:var(--warn)">⚠ Disponible únicamente cuando todos los checklist estén completados.</span>'}
+          </p>
+          <button class="btn btn-primary dep-deploy-btn" id="deployBtn"
+            ${ready?'':'disabled style="opacity:.5;cursor:not-allowed"'}
+            onclick="runDeploy('${cli.id}','${prod.id}','${reqId}')">
+            <i class="mdi mdi-rocket-launch-outline"></i>${ready?'Enviar a producción':'Checklist incompleto'}
+          </button>
+          <div id="deployLog"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function runDeploy(cliId, prodId, reqId){
+  const prod = getProducto(getCliente(cliId), prodId);
+  if(!(cpsForContext(prod).every(cp=>getCp(reqId,cp.id).checked))){
+    toast('Checklist incompleto','warn','No puedes desplegar hasta completar todos los CP.');
+    return;
+  }
+  const btn = document.getElementById('deployBtn');
+  btn.disabled = true; btn.style.opacity=.5; btn.style.cursor='not-allowed';
+  btn.innerHTML = '<i class="mdi mdi-loading mdi-spin"></i>Desplegando...';
+  const log = document.getElementById('deployLog');
+  log.innerHTML = '<div class="dep-log" id="depLogBox"></div>';
+  const box = document.getElementById('depLogBox');
+  const steps = [
+    'Validando estado de calidad (developmentProcessState = OK)...',
+    `Ejecutando querys en la base de datos para ${reqId}...`,
+    'Actualizando settings por ambiente (9,10,25,88,119,162,167)...',
+    'Actualizando recursos (resources / resourcesConfiguration)...',
+    'Actualizando WFD y jobs de impresión...',
+    'Creando cliente y producto en NT...',
+    'Sincronizando plantillas y fileSchemas...',
+  ];
+  let i=0;
+  const t0 = Date.now();
+  function stamp(){ return ((Date.now()-t0)/1000).toFixed(2)+'s'; }
+  function next(){
+    if(i<steps.length){
+      box.insertAdjacentHTML('beforeend',
+        `<div class="dl-line"><span class="dl-t">[${stamp()}]</span><span class="dl-run">▸</span><span>${steps[i]}</span></div>`);
+      box.scrollTop = box.scrollHeight;
+      i++;
+      setTimeout(next, 650);
+    } else {
+      box.insertAdjacentHTML('beforeend',
+        `<div class="dl-line"><span class="dl-t">[${stamp()}]</span><span class="dl-ok">✔</span><span class="dl-ok">Despliegue a producción completado correctamente.</span></div>`);
+      box.scrollTop = box.scrollHeight;
+      btn.innerHTML = '<i class="mdi mdi-check-all"></i>Desplegado a producción';
+      toast('Despliegue completado','ok',`${reqId} fue enviado a producción exitosamente.`);
+      emailPop('procesamiento@cadena.com.co',`Despliegue a producción · ${reqId}`,
+        'La configuración fue enviada a producción: querys, recursos, WFD y NT actualizados.');
+    }
+  }
+  next();
+}
+
+/* ================================================================
    NAVIGATION
    ================================================================ */
 const VIEW_LABELS = {
   dashboard:'Dashboard',tasks:'Tareas de desarrollo',checklist:'Lista de chequeo',
-  support:'Casos de soporte',kanban:'Vista Kanban',calendar:'Calendario',
+  deploy:'Despliegue a producción',
+  support:'Casos de soporte',
   params:'Parámetros',config:'Configuraciones',schemas:'Esquemas de mapeo',
   audit:'Auditoría',integrations:'Integraciones'
 };
@@ -2388,6 +2934,7 @@ document.querySelectorAll('.nav-item').forEach(n=>{
     document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
     document.getElementById('view-'+v).classList.add('active');
     document.getElementById('crumbCurrent').textContent = VIEW_LABELS[v];
+    if(v==='deploy'){ syncDeploySelectors(); renderDeploy(); }
     document.getElementById('content').scrollTop = 0;
     if(window.innerWidth<880) document.getElementById('app').classList.remove('mobile-open');
   });
@@ -2573,9 +3120,10 @@ renderBars();
 renderTasks();
 renderSupport();
 renderParams();
-renderChecklists();
-renderKanban();
-renderCal();
+initChecklistSelectors();
+initCpForm();
+initDeploySelectors();
+renderCpConfig();
 renderAudit();
 renderIntegrations();
 renderConfig();

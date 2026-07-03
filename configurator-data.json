@@ -1,0 +1,120 @@
+{
+  "_descripcion": "Configuración completa del demo de Configurator. Este JSON alimenta la vista 'Lista de chequeo', 'Despliegue a producción' y el tab de CP en Configuraciones. Está embebido dentro de configurator.html (constantes USERS, CHK_TIPOS, CLIENTES y CP_CATALOG) para que el demo funcione abriendo el HTML directamente sin servidor.",
+
+  "currentUser": "jhon",
+
+  "usuarios": [
+    { "id": "jhon",  "nombre": "Jhon Carvajal", "ini": "JC", "rol": "Desarrollador" },
+    { "id": "maria", "nombre": "Maria López",   "ini": "ML", "rol": "Calidad" },
+    { "id": "ana",   "nombre": "Ana Vega",      "ini": "AV", "rol": "Funcional" }
+  ],
+
+  "tiposChecklist": [
+    { "key": "generales", "label": "Checklist generales", "canal": null,  "icon": "clipboard-outline" },
+    { "key": "PE",        "label": "Checklist PE",         "canal": "PE",  "icon": "printer" },
+    { "key": "EN",        "label": "Checklist EN",         "canal": "EN",  "icon": "email-outline" },
+    { "key": "IMP",       "label": "Checklist IMP",        "canal": "IMP", "icon": "printer-3d" },
+    { "key": "DIG",       "label": "Checklist DIG",        "canal": "DIG", "icon": "monitor" },
+    { "key": "SMS",       "label": "Checklist SMS",        "canal": "SMS", "icon": "message-text-outline" }
+  ],
+
+  "clientes": [
+    {
+      "id": "0005_CanalSMS",
+      "nombre": "0005_CanalSMS",
+      "productos": [
+        {
+          "id": "CanalSMS",
+          "nombre": "CanalSMS",
+          "canales": ["PE", "EN", "IMP", "DIG", "SMS"],
+          "requerimientos": [
+            { "id": "FORE-001", "tipo": "FORE", "desc": "Configuración inicial CanalSMS" },
+            { "id": "FORE-014", "tipo": "FORE", "desc": "Integración DIAN electrónica v2" },
+            { "id": "RECA-022", "tipo": "RECA", "desc": "Gateway API · refactor SQS" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0012_BancoAndino",
+      "nombre": "0012_BancoAndino",
+      "productos": [
+        {
+          "id": "Extractos",
+          "nombre": "Extractos",
+          "canales": ["PE", "EN", "IMP"],
+          "requerimientos": [
+            { "id": "FORE-030", "tipo": "FORE", "desc": "Extractos mensuales PE/EN" },
+            { "id": "RECA-011", "tipo": "RECA", "desc": "Ajuste plantilla email" }
+          ]
+        },
+        {
+          "id": "Certificados",
+          "nombre": "Certificados",
+          "canales": ["EN", "DIG"],
+          "requerimientos": [
+            { "id": "FORE-041", "tipo": "FORE", "desc": "Certificados tributarios digitales" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0020_DIAN",
+      "nombre": "0020_DIAN",
+      "productos": [
+        {
+          "id": "Facturacion",
+          "nombre": "Facturación",
+          "canales": ["IMP", "EN"],
+          "requerimientos": [
+            { "id": "FORE-050", "tipo": "FORE", "desc": "Facturación electrónica masiva" }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "catalogoCp": [
+    { "id": "G-001", "tipo": "generales", "modo": "auto",   "nombre": "Configuracion de recursos en los servidores", "carga": true,  "asignadoA": "jhon" },
+    { "id": "G-002", "tipo": "generales", "modo": "auto",   "nombre": "Muestras Selectivas",                          "carga": true,  "asignadoA": "jhon" },
+    { "id": "G-003", "tipo": "generales", "modo": "auto",   "nombre": "Genera guias printnet",                        "carga": true,  "asignadoA": "jhon" },
+    { "id": "G-004", "tipo": "generales", "modo": "manual", "nombre": "Configuracion de recursos en los servidores",  "carga": true,  "asignadoA": "jhon" },
+    { "id": "G-005", "tipo": "generales", "modo": "manual", "nombre": "Muestras Selectivas",                          "carga": true,  "asignadoA": "jhon" },
+    { "id": "G-006", "tipo": "generales", "modo": "manual", "nombre": "Genera guias printnet",                        "carga": true,  "asignadoA": "jhon" },
+
+    { "id": "PE-001", "tipo": "PE", "modo": "manual", "nombre": "Carga de PDF individuales a PE",    "carga": true,  "asignadoA": "jhon" },
+    { "id": "PE-002", "tipo": "PE", "modo": "manual", "nombre": "Validar detalle de producto en PE", "carga": false, "asignadoA": "jhon" },
+    { "id": "PE-003", "tipo": "PE", "modo": "auto",   "nombre": "Genera y carga muestras PE",        "carga": true,  "asignadoA": "jhon" },
+
+    { "id": "EN-001", "tipo": "EN", "modo": "manual", "nombre": "Validar plantilla de email",       "carga": true,  "asignadoA": "jhon" },
+    { "id": "EN-002", "tipo": "EN", "modo": "manual", "nombre": "Correo de aprobación (setting 9)",  "carga": false, "asignadoA": "ana" },
+    { "id": "EN-003", "tipo": "EN", "modo": "auto",   "nombre": "Envío de muestras email",          "carga": false, "asignadoA": "jhon" },
+
+    { "id": "IMP-001", "tipo": "IMP", "modo": "manual", "nombre": "Validar sheetname / job split",      "carga": true, "asignadoA": "jhon" },
+    { "id": "IMP-002", "tipo": "IMP", "modo": "manual", "nombre": "Generar archivo de detalles",        "carga": true, "asignadoA": "jhon" },
+    { "id": "IMP-003", "tipo": "IMP", "modo": "auto",   "nombre": "Genera archivos de impresión (WFD)", "carga": true, "asignadoA": "jhon" },
+
+    { "id": "DIG-001", "tipo": "DIG", "modo": "manual", "nombre": "Validar canal digital",         "carga": false, "asignadoA": "jhon" },
+    { "id": "DIG-002", "tipo": "DIG", "modo": "auto",   "nombre": "Publicación en portal digital", "carga": false, "asignadoA": "jhon" },
+
+    { "id": "SMS-001", "tipo": "SMS", "modo": "manual", "nombre": "Validar mensaje de texto", "carga": false, "asignadoA": "jhon" },
+    { "id": "SMS-002", "tipo": "SMS", "modo": "manual", "nombre": "Validar URL variable",     "carga": false, "asignadoA": "jhon" },
+    { "id": "SMS-003", "tipo": "SMS", "modo": "auto",   "nombre": "Envío de muestras SMS",    "carga": false, "asignadoA": "jhon" }
+  ],
+
+  "reglasFlujo": {
+    "soloMisChecklist": true,
+    "manualAntesDeAuto": "Todos los CP manuales deben estar marcados para habilitar el botón 'Ejecutar CP automáticos'.",
+    "pasoAProduccion": "Solo se habilita el despliegue a producción cuando todos los CP (manuales y automáticos) del requerimiento están completados.",
+    "filtroCanales": "Un CP de tipo canal (PE/EN/IMP/DIG/SMS) solo aparece si el producto tiene ese canal habilitado.",
+    "despliegue": [
+      "Validar estado de calidad (developmentProcessState = OK)",
+      "Ejecutar querys en la base de datos",
+      "Actualizar settings por ambiente (9,10,25,88,119,162,167)",
+      "Actualizar recursos (resources / resourcesConfiguration)",
+      "Actualizar WFD y jobs de impresión",
+      "Crear cliente y producto en NT",
+      "Sincronizar plantillas y fileSchemas"
+    ]
+  }
+}
