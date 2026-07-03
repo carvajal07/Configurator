@@ -1,0 +1,93 @@
+Configurator:
+V1 Que tiene?
+1. Creacion de parametros nuevos
+2. Modificacion de parametros existentes
+3. Guarda el historico de los cambios realizados en la BD (parametros)
+4. Configuracion de clientes
+5. Configuracion de productos
+6. Configuracion de subproductos sin segmentacion
+7. Configuracion del proceso sin segmentacion
+8. Agregar campos por defecto
+9. Carga de settings de cada producto
+10. Carga de filesByProduct
+11. Generacion de json FileSchema con los campos del cliente (csv, multiples registros, xml)
+12. Creacion de nuevos campos en la estructura
+13. Creacion de funciones para transformaciones de campos
+
+
+Que sigue?
+V2
+
+
+################
+1. Agregar canales SMS y DIG al front (estos deben ser checkbox)
+   1.1 para el apartado del canal SMS se deben agregar los siguientes campos
+      LLeva SMS (185) Boolean
+      Lleva url (68) Boolean
+      Lleva url variable (69) Boolean
+      Mensaje de texto (74) String (recuerda no usar caracteres especiales, tildes o eñes)
+      Copy variable (77) Boolean
+      Celulares para las muestras (88) String
+      nombres url (182) String (separador por coma)
+      contraseña SMS (183) Boolean
+   1.2 para el canal DIG de momento no se agregaran campos, es decir que solo tiene el checkbox y no genera apartado
+2. Generacion de json FileSchema con los campos obligatorios de cada canal
+   2.1. agregar campos genericos (IdUnico,Ordenamiento,Agrupamiento)
+      IdUnico: debe ir ligado a un campo del spool como la cedula, el nit o la factura
+      Ordenamiento: debe contener los criterios de ordenamiento (normalmente una concatenacion de varios campos)
+      Agrupamiento: debe contener los criterios de agrupamiento (normalmente una concatenacion de varios campos)
+   2.2. agregar campos para EN (Email,PlantillaEmail)
+      Email: correo para el envio de email
+      PlantillaEmail: codigo de template, se debe setear el codigo de plantilla equivalente en las rules by product
+   2.3. agregar campos genericos (Channel)
+      Channel: Campo con la logica para determinar porque canal se va cada registro
+   2.4. agregar campos para PE (ChannelPE,detalleProducto,NombrePDF,RutaPDF,TipoEnvio,fechaCorte,mesCorte,mesFactura,anioFactura)
+      ChannelPE: Siempre lleva esta esquema
+      detalleProducto: debe llevar el nombre del producto en PE
+      NombrePDF: nombre del pdf para carga a PE
+      RutaPDF: ruta en donde quedaran los PDF individuales, siempre lleva este esquema
+      TipoEnvio: siempre lleva este esquema
+      fechaCorte: fecha del corte en formato dd/MM/yyyy
+      mesCorte: mes del corte en formato yyyy/MM
+      mesFactura: mes de la factura en formato MM
+      anioFactura: año de la factura en formato yyyy
+
+   2.5. agregar campos para DIG (ChannelDIG)
+      ChannelDIG: siempre lleva este esquema
+
+      3. Carga del fileschema a la BD
+      Se debe agregar un nuevo campo tipo texto "Nombre esquema", para que en este se indique el nombre del archivo (Spool, Anexo...), este debe ser obligatorio
+      Este se debe cargar a la tabla FileSchemas mediante el SP [SP_Insert_FileSchemas] de la BD ADMINCOM
+      Los parametros son los siguientes: Se recibe la ruta en donde se encuantra el archivo con los datos, los datos se deben separar por pipe (|)
+      Datos: 
+         FileSchemasId : enviar siempre vacio
+         ProductId : se envia el id de producto obtenido en la creacion o consulta del producto
+         FileName : Nombre esquema, texto capturado en el nuevo campo 
+         FileSchema : Json resultante del mapeo de los campos
+         FileVersion : siempre 1
+         State : siempre 1
+         FilesByProductId : Id resultante del insert a la tabla de FilesByProduct
+         DatabaseSchema : De momento debe ir vacio
+   
+         0. Generar y cargar dataBase Schema
+
+
+AJUSTES CONFIGURATOR 2024
+1. el valor de codificacion debe ir en minuscula - OK
+2. los campos de IMP toca validarlos. cuando el proceso no lleva distribucion no son necesarios los campos amarillos - Validar (Jhon) - OK, Los campos si deben estar
+3. addchannel debe estar despues de IdUnico - OK
+
+- Se debe agregar un check para agrupacion de registros (122) y eliminar lo que creamos la vez anterior- OK
+Revisar si el campo detalleProducto si se agrego a los campos genericos de PE - OK
+2.2. agregar campos para EN (Email,PlantillaEmail) -OK
+Email: correo para el envio de email -OK
+PlantillaEmail: codigo de template, se debe setear el codigo de plantilla equivalente en las rules by product -OK
+12 el campo Cedula en el databaseSchema no debe ser (Not Null) - OK
+
+15. En el setting 105 debe quedar esto "email,Nombre,IdUnico,IdProceso,ucid,PlantillaEmail" - OK
+16. Para que no genere error se debe agregar los campos UrlS3 y IdSample al schema de BD - OK
+Revisar si el campo de envio gateway esta quedando en false siempre - OK
+Ajustar los databaseschema para que cualquier spool tenga el campo archivo - OK
+el campo archivo debe ser varchar(250) - OK
+2. cambiar "Object" por "object" en los fileschemas - OK
+6. Se debe agregar el setting "Campo agrupamiento muestras" (129) a los seting generales (campo de texto) por defecto va el texto "Archivo" - OK

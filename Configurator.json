@@ -1,0 +1,265 @@
+##############PENDIENTES#######################
+
+V3
+1. Actualizacion de los recursos en el VCS
+
+
+Para entrega a meli
+
+1. SECCION (Esquemas de mapeo) Se debe agregar a la lista de funciones la funcion "Conditional" esta sirve para aplicar validaciones de comparacion a campos
+   Esta funcion recibe un campo (Normalmente capturado por la funcion "GetValue" antes de aplicar la funcion "Conditional"), un criterio (==, @=, !=, >, <) y un valor a comparar, si el campo es igual al valor se ejecuta la forma trueWay, de lo contrario se ejecuta la forma falseWay
+   Ejemplo de uso:
+   {
+       "name": "Conditional",
+       "params": {
+           "Criterio": "==",
+           "Value": "04",
+           "trueWay": [
+               {
+                   "name": "SetValue",
+                   "params": {
+                       "setValue": "Contingencia"
+                   }
+               }
+           ],
+           "FalseWay": [
+               {
+                   "name": "SetValue",
+                   "params": {
+                       "setValue": "Normal"
+                   }
+               }
+           ]
+       }
+   }
+2. SECCION (Configuraciones) Creacion de subproductos
+   Se debebe crear un apartado nuevo (Debajo de producto) con 2 campos (Subproducto y descripcion) y agregar un boton de "Agregar subproducto"
+   SP para insertar el subproducto: SP_Insert_SubProduct
+   Parametros:
+   @Nit BIGINT
+	, @NameProduct VARCHAR(100)
+	, @Name VARCHAR(100)
+	, @Description VARCHAR(255)
+3. Insertar los setting de subproducto (Aplica para impresion, settings: 20(Job Impresión)"job",46(formato salida) lista desplegable "PDF,PS,AFP") estos setting se agregan por cada subproducto
+   SP para insertar los setting: SP_Insert_SettingBySubProduct
+   Parametros:
+   @Nit BIGINT
+	, @Product VARCHAR(50)
+	, @SubProduct VARCHAR(50)
+	, @Setting VARCHAR(255) //nombre del setting
+	, @PrinterName VARCHAR(20)
+	, @Value VARCHAR(255) //job para el seting 20 y formato para el setting 46
+4. Creacion cliente y producto en NT incluyendo validacion de existencia (Se ejecuta al final cuando todos los setting esten listos)
+   Revisar la posibilidad de crear con el mismo id de producto en los dos ambientes
+
+   Definicion creacion productos NT
+   1. Se debe validar si el cliente existe en NT
+      1.1 Si no existe se debe crear
+      1.2 Consultar el cliente para obtener el id
+   2. Se debe validar si el producto existe en NT
+      2.1 Si no existe se debe crear
+      2.2 Consultar el producto para obtener el id
+   3. Insertar el id en la BD de 5X en su respectivo setting (167)
+
+
+
+8. Configuracion de subproductos con segmentacion (se debe agregar el setting 127 "SegmentSheets" y 128 "SegmentValues")
+
+
+
+V4
+2. Carga de reglas de recursos a las BD (resources,resourcesConfiguration)
+   los campos de imagenes (recursos) siempre deben llevar en el nombre la palabra "Resource" - Pendiente para V3
+5. Carga de los template a la BD
+3. Carga de BD recursos (archivos de retenciones, muestras...) resources_{productId}
+   implica la creacion de la tabla
+4. Configuracion de reglas del producto (RulesByProduct)
+10. paso a produccion de una configuracion X
+6. Entrega de lista de chequeo para el desarrollador
+
+SECCION (Configuraciones)
+
+   JOBS:
+   PDF:PDF_600_Xerox.job - XEROX
+   PS:ps_300_screen_SplitByGroup.job - SCREEN
+   AFP:afp_300_ip5000_SplitByGroup.job - IP5000
+  
+
+
+13. (NO VA EN SETTINGS)Carga de los template a la BD
+   Agregar un campo de texto sin limite de caracteres si el proceso lleva EN, esto es para el campo de HTML (a este se le deben eliminar los saltos de linea)
+   SP_Insert_Template5X
+   @Name VARCHAR(150) 
+	, @Description VARCHAR(500)
+	, @Config VARCHAR(MAX) //template
+
+  /*
+  //Esto lo agrega Wen en el nuevo SP  
+	, @Visibility VARCHAR(50) //Siempre va el valor "Publica"
+	, @Type VARCHAR(50) //siempre va el valor "Predeterminada"
+	, @Format VARCHAR(50) //Siempre va el valor "Email"
+	, @UserId BIGINT //user id de la persona que esta autenticada
+    , @Mjml  VARCHAR(MAX) //Siempre vacio
+    , @Thumbnail VARCHAR(300) = null //Siempre vacio
+    , @FileSchema VARCHAR(MAX) = null //Siempre vacio
+	, @SupplierCode VARCHAR(50) = NULL //
+*/
+
+
+SECCION (Lista de chequeo)
+15. Entrega de lista de chequeo para el desarrollador
+Los CP se dividiran en 2 sessiones (casos de validacion automatica y casos de validacion manual)
+
+SECCION (Paso a producción)
+16. paso a produccion de una configuracion X
+   Valida que es estado de pruebas de calidad en la tabla developmentProcessState ya este en 'OK'
+   Tener en cuenta: campos que cambian entre ambientes
+      Settings:9,10,25,88,119,162,167 (posiblemente debamos crear estos campos en el front para que se inserten)
+
+NUEVA SECCION (Config opcionales)   
+3. (NO VA EN SETTINGS)Carga de BD recursos (archivos de retenciones, muestras...) resources_{productId}
+   
+   debe crear una tabla en DATACOM con la estructura resources_{productId}
+
+   Si se marca el check de recursos en BD se agrega un campo de texto para poner los campos de la tabla, por defecto lleva esto "Id Int,IdUnico Varchar(20),Channel Varchar(20)"
+   SP_Create_ResourceData
+   @Name Varchar(150),
+   @Campos varchar(max)
+
+V4
+Rollback de pasos a producción de RECAS
+2. Carga de reglas de recursos a las BD (resources,resourcesConfiguration)
+4. Configuracion de reglas del producto (RulesByProduct)
+1. Actualizacion de los recursos en el VCS
+8. Configuracion de subproductos con segmentacion (se debe agregar el setting 127 "SegmentSheets" y 128 "SegmentValues")
+
+
+
+NOTAS
+Revisar como puedo hacer para poner en produccion una imagen desde cualquier version
+pero sin hacer rollback (Posiblemente se pueda con las etiquetas o descargo la version que se quiera poner y ya con eso vuelvo y cargo, en el comentario debo poner que esa imagen es la version X)
+o puedo usar directamente la imagen segun el label que tenga o la version o la fecha (revisar si se puede)
+debo mostrar en una ventana el historico de las imagenes y para eso debo listarlas
+
+Proceso de Checklist
+x. El usuario ("Funcional") ingresa un nuevo proceso (Tabla "developmentProcess")
+   Esto se podria hacer en una nueva pestaña "Tareas" (lista desplegable con RECA, FORE, MIGRACION, SOPORTE)
+   Lista desplegable con cliente y producto (Creo que desde aca se agregaria el cliente, es decir que desde settings ya no seria necesario?)
+   Debe ingresar 3 fechas (fecha esperada entrega muestras,fecha estimada entrega a calidad,fecha estimada salida a produccion)
+   debe tener un boton de "Agregar tarea"
+   Desde esta misma pestaña se podrian consultar los estados de las tareas o seria una nueva vista? R/creo que deberia ser otra vista
+   Los estados podrian ir cambiando de manera automatica cada que un usuario va realizando sus tareas(creacion de la tarea inicial, llenado de lista de chequeo funcional, lista de chequeo desarrollo, paso a prod...)
+x. la lista de chequeo se consulta en las BDs partiendo del rol del usuario que ingresa (Developer o Functional)   
+x. la checklist de funcional no requiere consulta de settings, esta debe ser automatica consultando todos los registros
+   de la tabla ChecklistItems que pertenescan al funcional
+1. Se consultan todos los setting del producto
+2. El desarrollador debe ingresar Cliente, Producto y Requerimiento donde va a realizar el check list
+3. El desarrollador debe ingresar o seleccionar de una lista el idTransmission con el que hizo pruebas completas (Este es para comprobar los check de los CP automaticos)
+
+2. revisar fechas de procesos
+3. revisar ultimos procesos realizados
+
+El nodo "path" en el canal principal para el mapeo de XML debe ir vacio o no va? - Pendiente validar
+
+JHON
+- agregar setting 91 a generales, usado para muestras de PE (Revisarlo bien, porque creo que se puede eliminar) - Pendiente validar
+Validar setting 129, como se usa. para que?
+Revisar que parametros son necesarios para cada funcion
+5X
+1. debo poner un setting que indique la cantidad de muestras por canal y limitar el input a unas 20 para email y SMS, 100 para IMP y PE
+
+AJUSTES PENDIENTES 5X
+
+Tabla aprobaciones
+Proceso;Cliente;Producto;Subproducto;Fecha;UsuarioAprobador;Canal;Cantidad
+
+Actualizacion automatica de recursos
+1. hacerlo similar a resman de sura
+2. limitar la cantidad de muestras
+3. que pasa si esta procesando un archivo real? no se puede actualizar el archivo
+4. poner un control para cuando se esta procesando
+5. revisar para poner las imagenes en VCS
+6. Imagenes de fisico para press matcher
+7. Estandar de impresion (un solo WFD para generar archivos de impresion para las principales maquinas)
+8. debo revisar como quedaria el tema de las repocisiones
+
+- depuracion (crear casos)
+- cambiar destinatario monitoreo
+- permisos para soporte
+- actualizar videos
+
+reglas usuarios:
+1. agregar ventana de login al front (vamos a usar la que tiene el front de aprobaciones http://10.1.0.97/?id=dfggj)
+2. crear nuevos roles en la tabla "Role" (Admin,Aprover,Consult,Processor,Operator)
+3. modificar opciones de vistas para las diferentes pantallas segun el rol
+4. crear tabla de configuracion que me diga que rol puede ver x ventanas
+   Campos para la tabla:
+   IdConfig;roleId;viewAdmin(bit);viewProcess(bit);viewJobs(bit);viewReports(bit);viewReplacements(bit)
+5. Agregar el modulo de registro usuarios a la landing de procesos (a la pestaña administracion)
+6. Admin puede ver todas las pestañas
+7. Processor puede ver Proceso, Trabajos
+8. Aprover y Consult No pueden ver ninguna ventana del front
+9. Operator puede ver Reportes, Reposiciones
+10. Agregar nueva pestaña (Administración)
+11. Definir mensajes de respuesta para el login del front en los diferentes excenarios
+    Cuando el usuario no existe
+    Cuando el rol sea Aprover o Consult
+    Contraseña incorrecta
+
+Correo aprobacion(9): Gateway - cliente, desarrollador, procesamiento
+Muestras(9): Gateway - cliente, desarrollador y controller
+Finalizacion(10): SMTP - desarrollador, procesamiento y controller
+Devolucion(119): SMTP - desarrollador, procesamiento y controller
+Aprobacion SMTP
+
+Preguntas:
+El setting 9 se usa para las muestras email y para el correo de aprobacion?
+
+4. Consultar los clientes desde metrics
+   Pendiente de reunión con el equipo transversal para revisar si se realizara por consulta a la BD o con un API
+  
+x. poner los parametros que recibe cada funcion en la creacion de fileschemas
+
+4. se debe agregar el setting by subproduct 86 con la extension del archivo, siempre tif - Pendiente para V3
+6. Toca agregar el setting 91 "Extension para el archivo de muestras" Por defecto con el valor "pdf" - Eliminar desde codigo
+
+7. Revisar los setting de carga a S3 (93,94,95), para cargar las muestras a S3 los utiliza - Agregar desde C# tomando los parametros
+8. Se esta realizando la carga de las muestras al bucket de PE y cuando no tienen PE no se puede cargar
+   Es decir que toca configurar el setting 78 (nombre del bucket)
+
+Agregar el setting 129 - Pendiente validar
+
+
+
+
+
+
+
+
+
+
+13. Los campos obligatorios (IdUnico,Agrupa,Ordena...) quedaron entre los campos en el proceso de canales - OK, estan bien
+
+
+26 junio 2024
+Para GIO (Todos estos ajustes quedaron listos)
+1. los nodos "channel" en el proceso de mapeo por canales no deben llevar el nodo "position" 
+2. los canales secundarios deben estar dentro del principal (mapeo de canales)
+3. Agregar a los separadores la opción de configurar el caracter Tab o revisar como recibir estos caracteres
+4. poner trimspace disponible para todos los campos (Trimespace global para todos los campos que se leyeron desde la estructura)
+5. Se debe agregar el setting "Sheetname split" (17) a los seting de IMP (campo de texto) por defecto va el texto "%g"
+6. Se debe agregar el setting "Job split" (18) a los seting de IMP (campo de texto) por defecto va el texto
+   "D:\Impresion\HF_ARCHIVOS_CONFIG\Jobs_Impresion\PDF_Individual_Split.job"
+7. Agregar nuevo setting "Omite archivo detalles" (196) tipo checkbox para que el proceso no genere ni cargue detalles (Aplica oara imp)
+8. Se debe agregar el setting "Campos detalles" (103) a los seting de IMP (campo de texto) por defecto va el texto "Cod_Producto,NumeroGuia,Paquete,UCID"
+   información "Separe con comas (,)" 
+   Aplica solo para cuando se tiene el canal IMP y este lleva sodim y si el setting 196 no esta en true
+9. Se debe agregar el setting "Tipos de reportes" (114) a los seting de IMP (campo de texto) por defecto va el texto "NombreDistribuidor|Ciudad" información 
+   "Si es mas de un reporte separa con pipes (|)"
+10. Se debe agregar el setting "Tipo impresión" (115) a los seting de IMP (campo de texto) por defecto va el texto "2"
+
+11. Agregar un check a los setting generales (lleva recursos en BD)
+12. Agregar checks (AutoGuia-188,PegadoAutomaticoGuia-189,EnsobradoAutomatico-190,Codigo barras-191)
+13. condicionar los campos de SMS.
+   El campo "Nombres URL" solo debe mostrarse si se da check en "Lleva URL"
+SQS para DEE

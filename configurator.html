@@ -1,0 +1,2608 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Configurator — Plataforma de gestión de proyectos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<style>
+/* ===========================================================
+   CONFIGURATOR — Enterprise Workflow Platform
+   =========================================================== */
+:root{
+  /* Palette: corporate deep blue + cool slate */
+  --bg:#f4f6fb;
+  --bg-2:#eef1f7;
+  --surface:#ffffff;
+  --surface-2:#fafbfd;
+  --border:#e3e7ef;
+  --border-2:#d4dae5;
+  --text:#0f1729;
+  --text-2:#3d4860;
+  --text-3:#6b7693;
+  --text-4:#9aa3b8;
+
+  --primary:#1e40af;
+  --primary-2:#2563eb;
+  --primary-3:#3b82f6;
+  --primary-50:#eef4ff;
+  --primary-100:#dbe7ff;
+
+  --accent:#0ea5e9;
+  --ok:#15803d;
+  --ok-bg:#dcfce7;
+  --warn:#b45309;
+  --warn-bg:#fef3c7;
+  --err:#b91c1c;
+  --err-bg:#fee2e2;
+  --info:#0369a1;
+  --info-bg:#e0f2fe;
+  --purple:#6d28d9;
+  --purple-bg:#ede9fe;
+
+  --sidebar:#0b1426;
+  --sidebar-2:#142136;
+  --sidebar-text:#c8d2e6;
+  --sidebar-text-2:#7a89a8;
+  --sidebar-hover:#1c2c47;
+  --sidebar-active:#1e40af;
+
+  --topbar:#ffffff;
+
+  --shadow-sm:0 1px 2px rgba(15,23,41,.06);
+  --shadow:0 4px 14px rgba(15,23,41,.07);
+  --shadow-lg:0 18px 40px -10px rgba(15,23,41,.18);
+
+  --radius:10px;
+  --radius-sm:6px;
+  --radius-lg:14px;
+
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-display:'Sora','Inter',sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+
+[data-theme="dark"]{
+  --bg:#0a1020;
+  --bg-2:#0e1528;
+  --surface:#131b30;
+  --surface-2:#182240;
+  --border:#243154;
+  --border-2:#2d3c66;
+  --text:#e7ecf7;
+  --text-2:#b7c1d9;
+  --text-3:#8593b3;
+  --text-4:#5f6c89;
+  --topbar:#131b30;
+  --primary-50:#1a2a52;
+  --primary-100:#22356b;
+  --ok-bg:#0f2e1e;
+  --warn-bg:#3a2509;
+  --err-bg:#3a1313;
+  --info-bg:#0c2a3d;
+  --purple-bg:#231a3d;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--text-4)}
+
+/* ===========================================================
+   LAYOUT
+   =========================================================== */
+.app{
+  display:grid;
+  grid-template-columns:248px 1fr;
+  height:100vh;
+}
+.app.collapsed{grid-template-columns:72px 1fr}
+
+/* SIDEBAR */
+.sidebar{
+  background:var(--sidebar);
+  color:var(--sidebar-text);
+  display:flex;
+  flex-direction:column;
+  border-right:1px solid rgba(255,255,255,.04);
+  overflow:hidden;
+}
+.brand{
+  padding:18px 20px 16px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  min-height:64px;
+}
+.brand-logo{
+  width:34px;height:34px;
+  border-radius:9px;
+  background:linear-gradient(135deg,var(--primary-3),var(--primary));
+  display:grid;place-items:center;
+  font-family:var(--font-display);
+  font-weight:700;color:#fff;font-size:16px;
+  box-shadow:0 4px 12px rgba(37,99,235,.4);
+  flex-shrink:0;
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.brand-text b{font-family:var(--font-display);font-weight:700;color:#fff;letter-spacing:-.01em;font-size:15.5px}
+.brand-text span{font-size:10.5px;color:var(--sidebar-text-2);letter-spacing:.16em;text-transform:uppercase;margin-top:3px;font-weight:500}
+.collapsed .brand-text{display:none}
+
+.user-card{
+  margin:14px 12px;
+  padding:11px 12px;
+  background:var(--sidebar-2);
+  border-radius:10px;
+  display:flex;align-items:center;gap:11px;
+  border:1px solid rgba(255,255,255,.04);
+}
+.avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  display:grid;place-items:center;
+  color:#fff;font-weight:600;font-size:13px;
+  flex-shrink:0;
+  position:relative;
+}
+.avatar::after{
+  content:'';position:absolute;bottom:-1px;right:-1px;
+  width:10px;height:10px;border-radius:50%;
+  background:#22c55e;border:2px solid var(--sidebar-2);
+}
+.user-meta{min-width:0;line-height:1.25}
+.user-meta b{display:block;color:#fff;font-size:13px;font-weight:600}
+.user-meta small{color:var(--sidebar-text-2);font-size:11px}
+.collapsed .user-card{padding:10px 0;justify-content:center;margin:14px 8px}
+.collapsed .user-meta{display:none}
+
+.nav{padding:8px 10px;flex:1;overflow-y:auto}
+.nav-section{padding:14px 12px 6px;font-size:10px;letter-spacing:.18em;color:var(--sidebar-text-2);text-transform:uppercase;font-weight:600}
+.collapsed .nav-section{visibility:hidden;height:0;padding:8px 0}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:9.5px 12px;
+  border-radius:8px;
+  color:var(--sidebar-text);
+  font-size:13.5px;font-weight:500;
+  margin:1px 0;
+  cursor:pointer;
+  transition:background .15s, color .15s;
+  position:relative;
+  white-space:nowrap;
+}
+.nav-item i{font-size:18px;color:var(--sidebar-text-2);flex-shrink:0;width:20px;text-align:center}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item:hover i{color:#fff}
+.nav-item.active{
+  background:linear-gradient(90deg,rgba(37,99,235,.25),rgba(37,99,235,.05));
+  color:#fff;
+}
+.nav-item.active i{color:var(--primary-3)}
+.nav-item.active::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:3px;background:var(--primary-3);border-radius:0 3px 3px 0;
+}
+.nav-badge{
+  margin-left:auto;background:var(--err);color:#fff;
+  font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;
+}
+.collapsed .nav-item span,.collapsed .nav-badge{display:none}
+.collapsed .nav-item{justify-content:center;padding:11px 0}
+
+.sidebar-foot{
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:10px 12px;
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;color:var(--sidebar-text-2);
+}
+.collapsed .sidebar-foot{justify-content:center}
+.collapsed .sidebar-foot span{display:none}
+.dot-ok{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;min-width:0;height:100vh}
+
+/* TOPBAR */
+.topbar{
+  height:64px;
+  background:var(--topbar);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 24px;
+  gap:18px;
+  flex-shrink:0;
+}
+.toggle-btn{
+  width:36px;height:36px;border-radius:8px;
+  display:grid;place-items:center;
+  color:var(--text-2);
+  transition:background .15s;
+}
+.toggle-btn:hover{background:var(--bg-2)}
+.crumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3)}
+.crumb b{color:var(--text);font-weight:600}
+.crumb i{font-size:14px;opacity:.5}
+
+.search-wrap{
+  margin-left:auto;
+  position:relative;
+  width:340px;
+}
+.search-wrap i{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--text-4);font-size:18px;
+}
+.search-wrap input{
+  width:100%;height:38px;
+  background:var(--bg-2);
+  border:1px solid transparent;
+  border-radius:9px;
+  padding:0 12px 0 38px;
+  outline:none;
+  transition:border .15s, background .15s;
+}
+.search-wrap input:focus{background:var(--surface);border-color:var(--primary-3)}
+.kbd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:10px;
+  padding:2px 6px;border-radius:4px;
+  background:var(--surface);color:var(--text-3);
+  border:1px solid var(--border);
+}
+
+.topbar-actions{display:flex;align-items:center;gap:4px}
+.icon-btn{
+  width:38px;height:38px;border-radius:8px;
+  display:grid;place-items:center;
+  color:var(--text-2);
+  position:relative;
+  transition:background .15s, color .15s;
+}
+.icon-btn:hover{background:var(--bg-2);color:var(--text)}
+.icon-btn .dot{
+  position:absolute;top:8px;right:9px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--err);border:2px solid var(--topbar);
+}
+.topbar-user{
+  display:flex;align-items:center;gap:10px;
+  padding:4px 10px 4px 4px;border-radius:30px;
+  cursor:pointer;
+  transition:background .15s;
+  margin-left:6px;
+}
+.topbar-user:hover{background:var(--bg-2)}
+.topbar-user .avatar{width:32px;height:32px;font-size:12px}
+.topbar-user .avatar::after{display:none}
+.topbar-user-info{line-height:1.1}
+.topbar-user-info b{display:block;font-size:13px;font-weight:600}
+.topbar-user-info small{color:var(--text-3);font-size:11px}
+
+/* CONTENT */
+.content{
+  flex:1;overflow-y:auto;
+  padding:26px 32px;
+  background:var(--bg);
+}
+.view{display:none}
+.view.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===========================================================
+   PRIMITIVES
+   =========================================================== */
+.page-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:22px;gap:20px;flex-wrap:wrap;
+}
+.page-title{
+  font-family:var(--font-display);
+  font-size:24px;font-weight:700;
+  letter-spacing:-.02em;margin:0;
+}
+.page-sub{color:var(--text-3);font-size:13.5px;margin-top:4px}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 16px;border-radius:8px;
+  font-weight:600;font-size:13px;
+  background:var(--surface);color:var(--text);
+  border:1px solid var(--border-2);
+  transition:all .15s;
+}
+.btn:hover{background:var(--bg-2);border-color:var(--text-4)}
+.btn i{font-size:16px}
+.btn-primary{
+  background:var(--primary);color:#fff;border-color:var(--primary);
+  box-shadow:0 1px 0 rgba(255,255,255,.15) inset, 0 4px 12px rgba(30,64,175,.25);
+}
+.btn-primary:hover{background:var(--primary-2);border-color:var(--primary-2)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text-2)}
+.btn-ghost:hover{background:var(--bg-2);color:var(--text)}
+.btn-sm{padding:6px 11px;font-size:12px;border-radius:7px}
+.btn-icon-only{padding:8px;width:34px;justify-content:center}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+}
+.card-head{
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.card-head h3{margin:0;font-size:14px;font-weight:600;letter-spacing:-.005em}
+.card-head h3 small{color:var(--text-3);font-weight:500;margin-left:8px}
+.card-body{padding:20px}
+
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:20px;
+  font-size:11.5px;font-weight:600;
+  background:var(--bg-2);color:var(--text-2);
+  white-space:nowrap;
+}
+.badge i{font-size:13px}
+.b-ok{background:var(--ok-bg);color:var(--ok)}
+.b-warn{background:var(--warn-bg);color:var(--warn)}
+.b-err{background:var(--err-bg);color:var(--err)}
+.b-info{background:var(--info-bg);color:var(--info)}
+.b-purple{background:var(--purple-bg);color:var(--purple)}
+.b-primary{background:var(--primary-50);color:var(--primary)}
+.b-dot::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:currentColor;display:inline-block;
+}
+
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 11px;border-radius:7px;
+  border:1px solid var(--border);
+  background:var(--surface);font-size:12px;
+  font-weight:500;color:var(--text-2);
+  cursor:pointer;transition:all .12s;
+}
+.chip:hover{border-color:var(--primary-3);color:var(--primary)}
+.chip.on{background:var(--primary-50);border-color:var(--primary-3);color:var(--primary)}
+
+.input,.select{
+  width:100%;height:38px;
+  background:var(--surface);
+  border:1px solid var(--border-2);
+  border-radius:8px;
+  padding:0 12px;
+  outline:none;transition:border .15s, box-shadow .15s;
+}
+.input:focus,.select:focus{
+  border-color:var(--primary-3);
+  box-shadow:0 0 0 3px rgba(59,130,246,.12);
+}
+textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
+.label{
+  display:block;font-size:11.5px;
+  color:var(--text-3);font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:6px;
+}
+
+/* TABLE */
+.table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  font-size:13px;
+}
+.table thead th{
+  text-align:left;
+  padding:11px 16px;
+  background:var(--surface-2);
+  color:var(--text-3);
+  font-weight:600;font-size:11.5px;
+  letter-spacing:.04em;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:1;
+}
+.table tbody td{
+  padding:13px 16px;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+.table tbody tr{transition:background .12s}
+.table tbody tr:hover{background:var(--surface-2)}
+.table tbody tr:last-child td{border-bottom:none}
+.id-pill{
+  font-family:var(--font-mono);font-size:11.5px;
+  padding:2px 8px;border-radius:5px;
+  background:var(--bg-2);color:var(--text-2);
+  font-weight:600;
+}
+
+.row-actions{display:flex;gap:2px;justify-content:flex-end}
+.row-actions .icon-btn{width:30px;height:30px}
+.row-actions .icon-btn i{font-size:16px}
+
+/* PROGRESS */
+.progress{
+  width:100%;height:6px;
+  background:var(--bg-2);border-radius:99px;overflow:hidden;
+  position:relative;
+}
+.progress > i{
+  display:block;height:100%;
+  background:linear-gradient(90deg,var(--primary-3),var(--primary));
+  border-radius:99px;
+  transition:width .4s;
+}
+.progress-row{display:flex;align-items:center;gap:8px}
+.progress-row span{font-size:11.5px;font-weight:600;color:var(--text-2);min-width:32px}
+
+/* ===========================================================
+   DASHBOARD
+   =========================================================== */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+  margin-bottom:22px;
+}
+.kpi{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:18px 18px 16px;
+  position:relative;overflow:hidden;
+  transition:transform .2s, box-shadow .2s;
+}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kpi-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.kpi-label{font-size:12px;color:var(--text-3);font-weight:600;letter-spacing:.02em}
+.kpi-ico{
+  width:34px;height:34px;border-radius:9px;
+  display:grid;place-items:center;font-size:18px;
+}
+.kpi-value{
+  font-family:var(--font-display);font-size:28px;
+  font-weight:700;letter-spacing:-.02em;line-height:1;
+}
+.kpi-delta{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:11.5px;font-weight:600;margin-top:10px;
+}
+.kpi-delta.up{color:var(--ok)}
+.kpi-delta.down{color:var(--err)}
+.kpi-delta small{color:var(--text-4);font-weight:500;margin-left:3px}
+.kpi-bar{
+  position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,transparent,currentColor,transparent);
+  opacity:.3;
+}
+
+.dash-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:18px;
+}
+.dash-grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:18px;
+}
+@media (max-width:1100px){.dash-grid,.dash-grid-2{grid-template-columns:1fr}}
+
+/* Bar chart */
+.bars{display:flex;align-items:flex-end;gap:14px;height:200px;padding:10px 4px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%}
+.bar-stack{
+  width:100%;display:flex;flex-direction:column-reverse;
+  border-radius:6px 6px 0 0;overflow:hidden;
+  flex:1;justify-content:flex-end;
+  background:var(--bg-2);
+  position:relative;
+}
+.bar-seg{width:100%;transition:height .4s}
+.bar-label{font-size:11px;color:var(--text-3);font-weight:600}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:24px;padding:10px 0}
+.donut{
+  --p:75;
+  width:140px;height:140px;border-radius:50%;
+  background:conic-gradient(var(--primary) calc(var(--p)*1%), var(--bg-2) 0);
+  display:grid;place-items:center;
+  position:relative;flex-shrink:0;
+}
+.donut::after{
+  content:'';position:absolute;inset:18px;
+  border-radius:50%;background:var(--surface);
+}
+.donut-c{position:relative;text-align:center;z-index:1}
+.donut-c b{font-family:var(--font-display);font-size:22px;display:block;line-height:1}
+.donut-c small{font-size:11px;color:var(--text-3);font-weight:600}
+.legend{display:flex;flex-direction:column;gap:9px;flex:1}
+.legend-row{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.legend-row .sw{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.legend-row b{margin-left:auto;font-weight:600}
+
+/* Feed */
+.feed{display:flex;flex-direction:column;gap:0}
+.feed-item{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.feed-item:last-child{border-bottom:none}
+.feed-ico{
+  width:32px;height:32px;border-radius:8px;
+  display:grid;place-items:center;flex-shrink:0;font-size:16px;
+}
+.feed-body{flex:1;min-width:0}
+.feed-body p{margin:0;font-size:13px;line-height:1.4}
+.feed-body p b{font-weight:600}
+.feed-body small{color:var(--text-3);font-size:11.5px}
+
+/* ===========================================================
+   WORKFLOW / STEPPER
+   =========================================================== */
+.workflow{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px 24px;
+  overflow-x:auto;
+}
+.workflow-title{
+  font-size:13px;font-weight:600;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin:0 0 18px;
+}
+.steps{
+  display:flex;align-items:flex-start;
+  min-width:max-content;gap:0;
+}
+.step{
+  display:flex;flex-direction:column;align-items:center;
+  flex:1;min-width:110px;position:relative;
+}
+.step:not(:last-child)::after{
+  content:'';position:absolute;
+  top:14px;left:calc(50% + 18px);right:calc(-50% + 18px);
+  height:2px;background:var(--border-2);z-index:0;
+}
+.step.done::after{background:var(--primary-3)}
+.step.done .step-dot{background:var(--primary);color:#fff;border-color:var(--primary)}
+.step.current .step-dot{
+  background:var(--surface);color:var(--primary);border-color:var(--primary);
+  box-shadow:0 0 0 4px var(--primary-50);
+}
+.step.current .step-dot::after{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:2px solid var(--primary-3);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(1);opacity:.6}
+  100%{transform:scale(1.3);opacity:0}
+}
+.step-dot{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--border-2);
+  display:grid;place-items:center;
+  position:relative;z-index:1;
+  font-size:13px;font-weight:700;color:var(--text-4);
+  font-family:var(--font-mono);
+}
+.step.done .step-dot i{font-size:16px}
+.step-label{
+  font-size:11.5px;color:var(--text-3);
+  margin-top:8px;text-align:center;max-width:120px;
+  line-height:1.3;font-weight:500;
+}
+.step.current .step-label,.step.done .step-label{color:var(--text)}
+.step-role{
+  font-size:10px;color:var(--text-4);
+  margin-top:3px;text-transform:uppercase;letter-spacing:.05em;
+}
+
+/* ===========================================================
+   CHECKLIST MODULE
+   =========================================================== */
+.filters-bar{
+  display:flex;gap:12px;align-items:flex-end;
+  flex-wrap:wrap;
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:16px;border-radius:var(--radius-lg);
+  margin-bottom:18px;
+}
+.filter-group{flex:1;min-width:160px}
+.filter-actions{display:flex;gap:8px;align-items:center}
+
+.accordion{display:flex;flex-direction:column;gap:10px}
+.acc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  transition:box-shadow .2s;
+}
+.acc-head{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  cursor:pointer;
+  user-select:none;
+  transition:background .12s;
+}
+.acc-head:hover{background:var(--surface-2)}
+.acc-chev{
+  font-size:20px;color:var(--text-3);
+  transition:transform .25s;
+}
+.acc.open .acc-chev{transform:rotate(90deg);color:var(--primary)}
+.acc-title{font-weight:600;font-size:14px;flex:1}
+.acc-meta{display:flex;align-items:center;gap:10px}
+.acc-progress{
+  font-size:11.5px;font-weight:600;color:var(--text-3);
+  font-family:var(--font-mono);
+}
+.acc-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .3s ease;
+}
+.acc.open .acc-body{max-height:1500px}
+.acc-body-inner{padding:0 18px 18px;border-top:1px solid var(--border)}
+
+.checklist-item{
+  display:grid;
+  grid-template-columns:auto 1fr auto auto auto auto;
+  align-items:center;gap:14px;
+  padding:14px 6px;
+  border-bottom:1px solid var(--border);
+  transition:background .12s;
+}
+.checklist-item:hover{background:var(--surface-2)}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item.done .check-name{text-decoration:line-through;color:var(--text-4)}
+
+.check{
+  width:20px;height:20px;
+  border:2px solid var(--border-2);
+  border-radius:5px;
+  display:grid;place-items:center;
+  cursor:pointer;flex-shrink:0;
+  transition:all .15s;
+  background:var(--surface);
+}
+.check:hover{border-color:var(--primary-3)}
+.check.on{background:var(--primary);border-color:var(--primary)}
+.check.on::after{
+  content:'';width:11px;height:6px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translate(1px,-1px);
+}
+
+.check-name{font-size:13.5px;font-weight:500}
+.check-meta{display:flex;align-items:center;gap:10px;color:var(--text-3);font-size:12px}
+.mini-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,#0ea5e9,#6366f1);
+  color:#fff;font-size:10.5px;font-weight:600;
+  display:grid;place-items:center;flex-shrink:0;
+}
+
+@media (max-width:900px){
+  .checklist-item{grid-template-columns:auto 1fr;row-gap:8px}
+  .checklist-item > *:nth-child(n+3){grid-column:2}
+}
+
+/* ===========================================================
+   KANBAN
+   =========================================================== */
+.kanban{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(260px,1fr));
+  gap:14px;
+  overflow-x:auto;
+  padding-bottom:12px;
+}
+.kan-col{
+  background:var(--bg-2);
+  border-radius:var(--radius-lg);
+  padding:14px;min-height:300px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.kan-col-head{
+  display:flex;align-items:center;gap:8px;
+  padding:0 4px 8px;
+  font-size:12.5px;font-weight:600;color:var(--text-2);
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.kan-col-head .count{
+  background:var(--surface);border:1px solid var(--border);
+  padding:1px 8px;border-radius:99px;
+  font-size:11px;color:var(--text-3);
+}
+.kan-col-head .dot-c{width:8px;height:8px;border-radius:50%}
+.kan-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  cursor:grab;
+  transition:transform .15s, box-shadow .15s;
+}
+.kan-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kan-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.kan-card h4{margin:0 0 8px;font-size:13.5px;font-weight:600;line-height:1.35}
+.kan-card-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;font-size:11.5px;color:var(--text-3);
+}
+
+/* ===========================================================
+   DRAWER (Detail panel)
+   =========================================================== */
+.drawer-mask{
+  position:fixed;inset:0;
+  background:rgba(11,20,38,.5);
+  backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  z-index:80;
+}
+.drawer-mask.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(560px,100%);
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  box-shadow:var(--shadow-lg);
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  z-index:90;
+  display:flex;flex-direction:column;
+}
+.drawer.open{transform:none}
+.drawer-head{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer-head h2{margin:0;font-size:17px;font-family:var(--font-display)}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 22px}
+
+.tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  margin:-20px -22px 18px;padding:0 22px;
+}
+.tab{
+  padding:13px 0;margin-right:22px;
+  font-size:13px;font-weight:600;color:var(--text-3);
+  border-bottom:2px solid transparent;
+  cursor:pointer;transition:color .15s, border-color .15s;
+}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--primary);border-bottom-color:var(--primary)}
+
+.dl{display:grid;grid-template-columns:130px 1fr;gap:12px 18px;font-size:13px}
+.dl dt{color:var(--text-3);font-weight:500}
+.dl dd{margin:0;font-weight:500}
+
+.timeline{position:relative;padding-left:28px}
+.timeline::before{
+  content:'';position:absolute;left:11px;top:6px;bottom:6px;
+  width:2px;background:var(--border);
+}
+.tl-item{position:relative;padding:6px 0 16px}
+.tl-item::before{
+  content:'';position:absolute;left:-22px;top:9px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--surface);
+  border:2px solid var(--primary);
+}
+.tl-item.done::before{background:var(--primary)}
+.tl-item b{font-size:13px;font-weight:600;display:block}
+.tl-item small{color:var(--text-3);font-size:11.5px}
+.tl-item p{margin:4px 0 0;font-size:12.5px;color:var(--text-2)}
+
+.chat{display:flex;flex-direction:column;gap:14px}
+.chat-msg{display:flex;gap:10px}
+.chat-bubble{
+  background:var(--bg-2);
+  border-radius:14px 14px 14px 4px;
+  padding:10px 14px;font-size:13px;line-height:1.45;
+  max-width:80%;
+}
+.chat-msg.me{flex-direction:row-reverse}
+.chat-msg.me .chat-bubble{
+  background:var(--primary);color:#fff;
+  border-radius:14px 14px 4px 14px;
+}
+.chat-meta{font-size:11px;color:var(--text-3);margin-top:4px}
+.chat-input{
+  display:flex;gap:8px;margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.chat-input input{flex:1}
+
+.file-card{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:8px;
+  transition:border .15s;
+}
+.file-card:hover{border-color:var(--primary-3)}
+.file-ico{
+  width:38px;height:38px;border-radius:8px;
+  background:var(--primary-50);color:var(--primary);
+  display:grid;place-items:center;font-size:18px;
+}
+.file-info{flex:1;min-width:0}
+.file-info b{display:block;font-size:13px;font-weight:600;truncate:ellipsis}
+.file-info small{color:var(--text-3);font-size:11.5px}
+
+/* ===========================================================
+   MODALS
+   =========================================================== */
+.modal-mask{
+  position:fixed;inset:0;
+  background:rgba(11,20,38,.55);
+  backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;
+  display:grid;place-items:center;
+  transition:opacity .2s;
+  z-index:100;padding:24px;
+}
+.modal-mask.open{opacity:1;pointer-events:auto}
+.modal{
+  background:var(--surface);
+  border-radius:14px;
+  width:min(540px,100%);max-height:90vh;overflow:auto;
+  transform:scale(.96);transition:transform .2s;
+  box-shadow:var(--shadow-lg);
+}
+.modal-mask.open .modal{transform:none}
+.modal-head{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-head h3{margin:0;font-size:16px;font-family:var(--font-display);font-weight:700}
+.modal-body{padding:20px 22px}
+.modal-foot{
+  padding:14px 22px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:8px;
+}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid > .span-2{grid-column:1/-1}
+
+/* ===========================================================
+   TOASTS + EMAIL POP
+   =========================================================== */
+.toasts{
+  position:fixed;bottom:24px;right:24px;
+  display:flex;flex-direction:column;gap:10px;
+  z-index:200;pointer-events:none;
+  max-width:380px;
+}
+.toast{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:4px solid var(--primary);
+  border-radius:10px;
+  padding:12px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  box-shadow:var(--shadow-lg);
+  transform:translateX(120%);
+  animation:slideIn .35s forwards;
+  pointer-events:auto;min-width:280px;
+}
+.toast.ok{border-left-color:var(--ok)}
+.toast.warn{border-left-color:var(--warn)}
+.toast.err{border-left-color:var(--err)}
+.toast i.t-ico{font-size:22px;color:var(--primary);flex-shrink:0}
+.toast.ok i.t-ico{color:var(--ok)}
+.toast.warn i.t-ico{color:var(--warn)}
+.toast.err i.t-ico{color:var(--err)}
+.toast b{display:block;font-size:13.5px;margin-bottom:2px}
+.toast small{color:var(--text-3);font-size:12px;display:block}
+@keyframes slideIn{to{transform:none}}
+@keyframes slideOut{to{transform:translateX(120%);opacity:0}}
+.toast.out{animation:slideOut .25s forwards}
+
+.email-pop{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:0;
+  box-shadow:var(--shadow-lg);
+  max-width:420px;min-width:360px;
+  transform:translateX(120%);
+  animation:slideIn .35s forwards;
+  pointer-events:auto;overflow:hidden;
+}
+.email-pop-head{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;padding:10px 16px;
+  display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;
+}
+.email-pop-head i{font-size:18px}
+.email-pop-body{padding:14px 16px}
+.email-pop-body .em-row{display:flex;gap:8px;font-size:12px;color:var(--text-3);margin-bottom:4px}
+.email-pop-body .em-row b{color:var(--text);font-weight:600}
+.email-pop-body h4{margin:8px 0 6px;font-size:14px;font-weight:600}
+.email-pop-body p{margin:0;font-size:12.5px;color:var(--text-2);line-height:1.5}
+
+/* ===========================================================
+   PARAMS / CONFIG SPECIFIC
+   =========================================================== */
+.tag-input{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:6px;border:1px solid var(--border-2);
+  border-radius:8px;min-height:42px;
+  background:var(--surface);
+}
+.tag{
+  background:var(--primary-50);color:var(--primary);
+  padding:3px 9px;border-radius:6px;font-size:12px;font-weight:500;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.tag i{cursor:pointer;font-size:14px;opacity:.6}
+.tag i:hover{opacity:1}
+
+.switch{
+  width:38px;height:22px;background:var(--border-2);
+  border-radius:99px;position:relative;cursor:pointer;
+  transition:background .2s;
+}
+.switch::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);
+  transition:left .2s;
+}
+.switch.on{background:var(--primary)}
+.switch.on::after{left:18px}
+
+/* Tree (schema mapping) */
+.tree-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:start}
+.tree{font-family:var(--font-mono);font-size:12.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px;min-height:300px}
+.tree-node{padding:5px 0 5px 18px;position:relative;cursor:pointer;border-radius:5px}
+.tree-node:hover{background:var(--bg-2)}
+.tree-node::before{
+  content:'└';position:absolute;left:4px;color:var(--text-4);
+}
+.tree-node.dir::before{content:'▸'}
+.tree-node.dir.open::before{content:'▾';color:var(--primary)}
+.tree-children{padding-left:14px;border-left:1px dashed var(--border-2);margin-left:8px}
+.tree-arrow{
+  display:grid;place-items:center;
+  font-size:32px;color:var(--primary);
+  padding-top:30px;
+}
+
+/* ===========================================================
+   CALENDAR mini
+   =========================================================== */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:12px}
+.cal-h{padding:6px;text-align:center;font-weight:600;color:var(--text-3);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.cal-d{
+  aspect-ratio:1;display:grid;place-items:center;
+  border-radius:6px;color:var(--text-2);position:relative;
+  cursor:pointer;transition:background .12s;
+}
+.cal-d:hover{background:var(--bg-2)}
+.cal-d.off{color:var(--text-4)}
+.cal-d.has::after{
+  content:'';position:absolute;bottom:4px;
+  width:4px;height:4px;border-radius:50%;background:var(--primary);
+}
+.cal-d.today{background:var(--primary);color:#fff;font-weight:600}
+
+/* SLA ring */
+.sla{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:11.5px;font-weight:600;
+}
+.sla-ring{
+  --p:60;width:24px;height:24px;border-radius:50%;
+  background:conic-gradient(var(--ok) calc(var(--p)*1%), var(--err-bg) 0);
+  display:grid;place-items:center;
+}
+.sla-ring::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:var(--surface)}
+.sla-ring{position:relative}
+.sla-ring span{position:relative;z-index:1;font-size:9px;font-weight:700}
+
+/* PRIORITY badges */
+.pri{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11.5px;font-weight:600;
+  padding:2px 8px;border-radius:5px;
+}
+.pri-low{background:#e0f2fe;color:#075985}
+.pri-med{background:#fef3c7;color:#92400e}
+.pri-high{background:#fee2e2;color:#991b1b}
+.pri-crit{background:#1f1937;color:#fff}
+[data-theme=dark] .pri-low{background:#0c2a3d;color:#7dd3fc}
+[data-theme=dark] .pri-med{background:#3a2509;color:#fcd34d}
+[data-theme=dark] .pri-high{background:#3a1313;color:#fca5a5}
+
+/* SCHEMAS specific */
+.schema-pill{
+  display:inline-flex;gap:5px;padding:1px 6px;border-radius:4px;
+  font-family:var(--font-mono);font-size:10.5px;
+  background:var(--purple-bg);color:var(--purple);
+  margin-left:6px;
+}
+
+/* responsive */
+@media (max-width:880px){
+  .app{grid-template-columns:0 1fr}
+  .sidebar{position:fixed;width:248px;height:100%;z-index:50;transform:translateX(-100%);transition:transform .25s}
+  .app.mobile-open .sidebar{transform:none}
+  .search-wrap{width:auto;flex:1}
+  .content{padding:18px}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="app" id="app">
+
+  <!-- ============= SIDEBAR ============= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">C</div>
+      <div class="brand-text">
+        <b>Configurator</b>
+        <span>Workflow OS</span>
+      </div>
+    </div>
+
+    <div class="user-card">
+      <div class="avatar">JC</div>
+      <div class="user-meta">
+        <b>Jhon Carvajal</b>
+        <small>Especialista</small>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">General</div>
+      <div class="nav-item active" data-view="dashboard"><i class="mdi mdi-view-dashboard-outline"></i><span>Dashboard</span></div>
+      <div class="nav-item" data-view="tasks"><i class="mdi mdi-clipboard-text-multiple-outline"></i><span>Tareas de desarrollo</span><span class="nav-badge">7</span></div>
+      <div class="nav-item" data-view="checklist"><i class="mdi mdi-checkbox-marked-circle-outline"></i><span>Lista de chequeo</span></div>
+      <div class="nav-item" data-view="support"><i class="mdi mdi-lifebuoy"></i><span>Casos de soporte</span><span class="nav-badge">3</span></div>
+      <div class="nav-item" data-view="kanban"><i class="mdi mdi-view-column-outline"></i><span>Kanban</span></div>
+      <div class="nav-item" data-view="calendar"><i class="mdi mdi-calendar-month-outline"></i><span>Calendario</span></div>
+
+      <div class="nav-section">Configuración</div>
+      <div class="nav-item" data-view="params"><i class="mdi mdi-tune-vertical"></i><span>Parámetros</span></div>
+      <div class="nav-item" data-view="config"><i class="mdi mdi-cog-outline"></i><span>Configuraciones</span></div>
+      <div class="nav-item" data-view="schemas"><i class="mdi mdi-file-tree-outline"></i><span>Esquemas de mapeo</span></div>
+
+      <div class="nav-section">Sistema</div>
+      <div class="nav-item" data-view="audit"><i class="mdi mdi-history"></i><span>Auditoría</span></div>
+      <div class="nav-item" data-view="integrations"><i class="mdi mdi-puzzle-outline"></i><span>Integraciones</span></div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="dot-ok"></div>
+      <span>v2.4.1 · Operacional</span>
+    </div>
+  </aside>
+
+  <!-- ============= MAIN ============= -->
+  <main class="main">
+
+    <header class="topbar">
+      <button class="toggle-btn" id="toggleSidebar" title="Colapsar"><i class="mdi mdi-menu" style="font-size:20px"></i></button>
+      <div class="crumb">
+        <i class="mdi mdi-home-outline"></i>
+        <span>Workspace</span>
+        <i class="mdi mdi-chevron-right"></i>
+        <b id="crumbCurrent">Dashboard</b>
+      </div>
+
+      <div class="search-wrap">
+        <i class="mdi mdi-magnify"></i>
+        <input placeholder="Buscar tareas, casos, parámetros..." />
+        <div class="kbd">⌘K</div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Tareas pendientes"><i class="mdi mdi-clipboard-list-outline" style="font-size:20px"></i><span class="dot"></span></button>
+        <button class="icon-btn" id="themeToggle" title="Tema"><i class="mdi mdi-weather-night" style="font-size:20px" id="themeIco"></i></button>
+        <button class="icon-btn" id="notifBtn" title="Notificaciones"><i class="mdi mdi-bell-outline" style="font-size:20px"></i><span class="dot"></span></button>
+        <div class="topbar-user">
+          <div class="avatar">JM</div>
+          <div class="topbar-user-info">
+            <b>Jhon Carvajal</b>
+            <small>Especialista</small>
+          </div>
+          <i class="mdi mdi-chevron-down" style="font-size:18px;color:var(--text-3)"></i>
+        </div>
+        <button class="icon-btn" title="Logout"><i class="mdi mdi-logout" style="font-size:20px"></i></button>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+
+      <!-- ===================================================
+           DASHBOARD VIEW
+           =================================================== -->
+      <section class="view active" id="view-dashboard">
+
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Dashboard operacional</h1>
+            <p class="page-sub">Resumen ejecutivo de tareas, bugs y SLA en tiempo real · Actualizado hace 2 min</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-download-outline"></i>Exportar</button>
+            <button class="btn btn-primary"><i class="mdi mdi-plus"></i>Nueva tarea</button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi" style="color:var(--primary)">
+            <div class="kpi-head">
+              <div class="kpi-label">Tareas activas</div>
+              <div class="kpi-ico" style="background:var(--primary-50);color:var(--primary)"><i class="mdi mdi-clipboard-pulse-outline"></i></div>
+            </div>
+            <div class="kpi-value">47</div>
+            <div class="kpi-delta up"><i class="mdi mdi-arrow-up" style="font-size:14px"></i>+12% <small>vs semana pasada</small></div>
+            <div class="kpi-bar"></div>
+          </div>
+
+          <div class="kpi" style="color:var(--err)">
+            <div class="kpi-head">
+              <div class="kpi-label">Bugs abiertos</div>
+              <div class="kpi-ico" style="background:var(--err-bg);color:var(--err)"><i class="mdi mdi-bug-outline"></i></div>
+            </div>
+            <div class="kpi-value">12</div>
+            <div class="kpi-delta down"><i class="mdi mdi-arrow-down" style="font-size:14px"></i>-3 <small>desde ayer</small></div>
+            <div class="kpi-bar"></div>
+          </div>
+
+          <div class="kpi" style="color:var(--warn)">
+            <div class="kpi-head">
+              <div class="kpi-label">Deploys pendientes</div>
+              <div class="kpi-ico" style="background:var(--warn-bg);color:var(--warn)"><i class="mdi mdi-rocket-launch-outline"></i></div>
+            </div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-delta up"><i class="mdi mdi-clock-outline" style="font-size:14px"></i>2 hoy <small>· 3 esta semana</small></div>
+            <div class="kpi-bar"></div>
+          </div>
+
+          <div class="kpi" style="color:var(--accent)">
+            <div class="kpi-head">
+              <div class="kpi-label">Casos soporte</div>
+              <div class="kpi-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-lifebuoy"></i></div>
+            </div>
+            <div class="kpi-value">18</div>
+            <div class="kpi-delta down"><i class="mdi mdi-arrow-down" style="font-size:14px"></i>-8% <small>SLA al día</small></div>
+            <div class="kpi-bar"></div>
+          </div>
+
+          <div class="kpi" style="color:var(--ok)">
+            <div class="kpi-head">
+              <div class="kpi-label">Tiempo prom. desarrollo</div>
+              <div class="kpi-ico" style="background:var(--ok-bg);color:var(--ok)"><i class="mdi mdi-timer-sand"></i></div>
+            </div>
+            <div class="kpi-value">4.2<span style="font-size:14px;color:var(--text-3);margin-left:2px">días</span></div>
+            <div class="kpi-delta up"><i class="mdi mdi-trending-up" style="font-size:14px"></i>+0.3d <small>tendencia mensual</small></div>
+            <div class="kpi-bar"></div>
+          </div>
+        </div>
+
+        <!-- Workflow stepper -->
+        <div class="workflow" style="margin-bottom:18px">
+          <h3 class="workflow-title">Flujo de estados · Tarea seleccionada: <span style="color:var(--primary)">FORE-014 · Integración DIAN v2</span></h3>
+          <div class="steps" id="stateSteps"></div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-head">
+              <h3>Tareas por estado <small>· últimos 30 días</small></h3>
+              <div style="display:flex;gap:6px">
+                <button class="chip on">Mes</button>
+                <button class="chip">Trim</button>
+                <button class="chip">Año</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="bars" id="bars"></div>
+              <div style="display:flex;justify-content:center;gap:18px;margin-top:14px;font-size:11.5px;color:var(--text-3)">
+                <span><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--primary);margin-right:5px"></span>Completadas</span>
+                <span><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--primary-3);margin-right:5px"></span>En progreso</span>
+                <span><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--border-2);margin-right:5px"></span>Pendientes</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Cumplimiento SLA</h3><span class="badge b-ok b-dot">Saludable</span></div>
+            <div class="card-body">
+              <div class="donut-wrap">
+                <div class="donut" style="--p:87">
+                  <div class="donut-c"><b>87%</b><small>cumplido</small></div>
+                </div>
+                <div class="legend">
+                  <div class="legend-row"><div class="sw" style="background:var(--ok)"></div>A tiempo <b>156</b></div>
+                  <div class="legend-row"><div class="sw" style="background:var(--warn)"></div>En riesgo <b>14</b></div>
+                  <div class="legend-row"><div class="sw" style="background:var(--err)"></div>Vencidos <b>9</b></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-grid-2">
+          <div class="card">
+            <div class="card-head"><h3>Bugs por severidad</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px"><span>Crítica</span><b style="font-family:var(--font-mono)">3</b></div>
+                  <div class="progress"><i style="width:18%;background:#1f1937"></i></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px"><span>Alta</span><b style="font-family:var(--font-mono)">5</b></div>
+                  <div class="progress"><i style="width:35%;background:var(--err)"></i></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px"><span>Media</span><b style="font-family:var(--font-mono)">9</b></div>
+                  <div class="progress"><i style="width:60%;background:var(--warn)"></i></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px"><span>Baja</span><b style="font-family:var(--font-mono)">11</b></div>
+                  <div class="progress"><i style="width:75%;background:var(--info)"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Actividad reciente</h3><a href="#" style="font-size:12px;color:var(--primary);font-weight:600">Ver todo →</a></div>
+            <div class="card-body" style="padding-top:6px">
+              <div class="feed">
+                <div class="feed-item">
+                  <div class="feed-ico" style="background:var(--ok-bg);color:var(--ok)"><i class="mdi mdi-check"></i></div>
+                  <div class="feed-body">
+                    <p><b>Maria López</b> aprobó la tarea <b>FORE-014</b> en QA</p>
+                    <small>hace 12 min · módulo de pruebas</small>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-rocket-launch-outline"></i></div>
+                  <div class="feed-body">
+                    <p><b>Jhon Carvajal</b> desplegó <b>RECA-022</b> a producción</p>
+                    <small>hace 1 h · v2.4.1</small>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico" style="background:var(--err-bg);color:var(--err)"><i class="mdi mdi-bug"></i></div>
+                  <div class="feed-body">
+                    <p><b>Carlos Ríos</b> reportó bug en <b>MIG-003</b></p>
+                    <small>hace 2 h · severidad alta</small>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico" style="background:var(--purple-bg);color:var(--purple)"><i class="mdi mdi-clipboard-check"></i></div>
+                  <div class="feed-body">
+                    <p><b>Ana Vega</b> completó checklist funcional de <b>FORE-017</b></p>
+                    <small>hace 3 h</small>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico" style="background:var(--primary-50);color:var(--primary)"><i class="mdi mdi-comment-text"></i></div>
+                  <div class="feed-body">
+                    <p><b>Cliente XYZ</b> comentó en <b>RECA-014</b></p>
+                    <small>hace 4 h</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================
+           TASKS VIEW
+           =================================================== -->
+      <section class="view" id="view-tasks">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Tareas de desarrollo</h1>
+            <p class="page-sub">Núcleo operativo · 47 tareas activas distribuidas en 12 estados</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-filter-variant"></i>Filtros</button>
+            <button class="btn"><i class="mdi mdi-download-outline"></i>Exportar</button>
+            <button class="btn btn-primary" onclick="openModal('modalNewTask')"><i class="mdi mdi-plus"></i>Crear nueva tarea</button>
+          </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">
+          <div class="kpi"><div class="kpi-head"><div class="kpi-label">FORE</div><div class="kpi-ico" style="background:var(--primary-50);color:var(--primary)"><i class="mdi mdi-file-document-outline"></i></div></div><div class="kpi-value">28</div><div class="kpi-delta"><small>Requerimientos</small></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-label">RECA</div><div class="kpi-ico" style="background:var(--purple-bg);color:var(--purple)"><i class="mdi mdi-swap-horizontal"></i></div></div><div class="kpi-value">14</div><div class="kpi-delta"><small>Cambios</small></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-label">MIG</div><div class="kpi-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-database-arrow-right-outline"></i></div></div><div class="kpi-value">5</div><div class="kpi-delta"><small>Migraciones</small></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-label">En riesgo SLA</div><div class="kpi-ico" style="background:var(--warn-bg);color:var(--warn)"><i class="mdi mdi-alert-outline"></i></div></div><div class="kpi-value">3</div><div class="kpi-delta down"><small>requieren atención</small></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div style="display:flex;gap:8px;align-items:center">
+              <h3>Listado de tareas</h3>
+              <button class="chip on">Todas</button>
+              <button class="chip">FORE</button>
+              <button class="chip">RECA</button>
+              <button class="chip">MIG</button>
+              <button class="chip">Mis tareas</button>
+            </div>
+            <div class="search-wrap" style="width:240px">
+              <i class="mdi mdi-magnify"></i>
+              <input placeholder="Filtrar..." />
+            </div>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Tipo</th><th>Nombre</th><th>Estado</th><th>Responsable</th><th>Prioridad</th><th>Entrega</th><th>Progreso</th><th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tasksBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           CHECKLIST VIEW
+           =================================================== -->
+      <section class="view" id="view-checklist">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Lista de chequeo</h1>
+            <p class="page-sub">Control de calidad por etapas · Trazabilidad completa del flujo</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-file-export-outline"></i>Exportar PDF</button>
+            <button class="btn btn-primary" onclick="toast('Nuevo checklist creado','ok','Listo para diligenciar.')"><i class="mdi mdi-plus"></i>Crear checklist</button>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <div class="filter-group">
+            <div class="label">Cliente</div>
+            <select class="select"><option>Todos</option><option>Cliente XYZ</option><option>Banco Andino</option><option>DIAN</option></select>
+          </div>
+          <div class="filter-group">
+            <div class="label">Producto</div>
+            <select class="select"><option>Todos</option><option>Gateway</option><option>Efactura</option><option>DCOP</option></select>
+          </div>
+          <div class="filter-group">
+            <div class="label">Tipo</div>
+            <select class="select"><option>Todos</option><option>FORE</option><option>RECA</option><option>MIG</option></select>
+          </div>
+          <div class="filter-group">
+            <div class="label">Estado</div>
+            <select class="select"><option>Todos</option><option>Pendiente</option><option>En proceso</option><option>Completado</option><option>Bloqueado</option></select>
+          </div>
+          <div class="filter-group">
+            <div class="label">Responsable</div>
+            <select class="select"><option>Todos</option><option>Jhon Carvajal</option><option>Maria López</option><option>Ana Vega</option></select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-primary"><i class="mdi mdi-magnify"></i>Buscar</button>
+            <button class="btn"><i class="mdi mdi-refresh"></i>Limpiar</button>
+          </div>
+        </div>
+
+        <div class="accordion" id="checklistAcc"></div>
+      </section>
+
+      <!-- ===================================================
+           SUPPORT VIEW
+           =================================================== -->
+      <section class="view" id="view-support">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Casos de soporte</h1>
+            <p class="page-sub">Gestión ITSM · SLA monitoreado en tiempo real</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-chart-timeline-variant"></i>Reportes</button>
+            <button class="btn btn-primary" onclick="openModal('modalNewCase')"><i class="mdi mdi-plus"></i>Crear caso</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">
+          <div class="kpi" style="color:var(--info)"><div class="kpi-head"><div class="kpi-label">Casos abiertos</div><div class="kpi-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-folder-open-outline"></i></div></div><div class="kpi-value">18</div><div class="kpi-delta up"><small>3 nuevos hoy</small></div></div>
+          <div class="kpi" style="color:var(--err)"><div class="kpi-head"><div class="kpi-label">Críticos</div><div class="kpi-ico" style="background:var(--err-bg);color:var(--err)"><i class="mdi mdi-fire"></i></div></div><div class="kpi-value">2</div><div class="kpi-delta down"><small>requieren escalamiento</small></div></div>
+          <div class="kpi" style="color:var(--warn)"><div class="kpi-head"><div class="kpi-label">Vencidos</div><div class="kpi-ico" style="background:var(--warn-bg);color:var(--warn)"><i class="mdi mdi-clock-alert-outline"></i></div></div><div class="kpi-value">4</div><div class="kpi-delta down"><small>SLA superado</small></div></div>
+          <div class="kpi" style="color:var(--ok)"><div class="kpi-head"><div class="kpi-label">Resueltos hoy</div><div class="kpi-ico" style="background:var(--ok-bg);color:var(--ok)"><i class="mdi mdi-check-all"></i></div></div><div class="kpi-value">11</div><div class="kpi-delta up"><small>+27% vs ayer</small></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Tickets activos</h3>
+            <div style="display:flex;gap:6px">
+              <button class="chip on">Todos (18)</button>
+              <button class="chip">Nuevo</button>
+              <button class="chip">Asignado</button>
+              <button class="chip">En solución</button>
+              <button class="chip">Escalado</button>
+            </div>
+          </div>
+          <table class="table">
+            <thead><tr>
+              <th>Ticket</th><th>Cliente</th><th>Prioridad</th><th>Responsable</th><th>Estado</th><th>SLA</th><th>Creado</th><th>Actualizado</th><th></th>
+            </tr></thead>
+            <tbody id="supportBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           KANBAN VIEW
+           =================================================== -->
+      <section class="view" id="view-kanban">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Vista Kanban</h1>
+            <p class="page-sub">Arrastra las tarjetas entre columnas para cambiar el estado</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-filter-variant"></i>Filtros</button>
+            <button class="btn btn-primary"><i class="mdi mdi-plus"></i>Nueva</button>
+          </div>
+        </div>
+        <div class="kanban" id="kanbanBoard"></div>
+      </section>
+
+      <!-- ===================================================
+           CALENDAR VIEW
+           =================================================== -->
+      <section class="view" id="view-calendar">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Calendario de entregas</h1>
+            <p class="page-sub">Mayo 2026 · Vista mensual</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-icon-only"><i class="mdi mdi-chevron-left"></i></button>
+            <button class="btn">Hoy</button>
+            <button class="btn btn-icon-only"><i class="mdi mdi-chevron-right"></i></button>
+            <button class="btn btn-primary"><i class="mdi mdi-plus"></i>Evento</button>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-head"><h3>Mayo 2026</h3></div>
+            <div class="card-body">
+              <div class="cal" id="cal"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Próximas entregas</h3></div>
+            <div class="card-body">
+              <div class="feed">
+                <div class="feed-item"><div class="feed-ico" style="background:var(--primary-50);color:var(--primary)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>FORE-014</b> · Integración DIAN v2</p><small>17 May · 2 días restantes</small></div></div>
+                <div class="feed-item"><div class="feed-ico" style="background:var(--warn-bg);color:var(--warn)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>RECA-022</b> · Gateway API</p><small>20 May · 5 días restantes</small></div></div>
+                <div class="feed-item"><div class="feed-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>MIG-003</b> · Migración Colfondos</p><small>24 May · 9 días restantes</small></div></div>
+                <div class="feed-item"><div class="feed-ico" style="background:var(--purple-bg);color:var(--purple)"><i class="mdi mdi-flag"></i></div><div class="feed-body"><p><b>FORE-017</b> · WSSE Signatures</p><small>28 May · 13 días restantes</small></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           PARAMS VIEW
+           =================================================== -->
+      <section class="view" id="view-params">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Parámetros del sistema</h1>
+            <p class="page-sub">Configuración de variables globales · Acceso restringido a administradores</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-upload-outline"></i>Importar</button>
+            <button class="btn btn-primary" onclick="openModal('modalNewParam')"><i class="mdi mdi-plus"></i>Agregar parámetro</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Parámetros configurados <small>· 24 activos</small></h3>
+            <div class="search-wrap" style="width:240px">
+              <i class="mdi mdi-magnify"></i>
+              <input placeholder="Buscar parámetro..." />
+            </div>
+          </div>
+          <table class="table">
+            <thead><tr><th>Nombre</th><th>Descripción</th><th>Valor</th><th>Tipo</th><th>Última modificación</th><th></th></tr></thead>
+            <tbody id="paramsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           CONFIG VIEW
+           =================================================== -->
+      <section class="view" id="view-config">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Configuraciones</h1>
+            <p class="page-sub">Ajustes por cliente, producto y canal</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-head"><h3>Cliente activo</h3></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+              <div><div class="label">Cliente</div><select class="select"><option>Cliente XYZ S.A.S.</option><option>Banco Andino</option><option>DIAN</option></select></div>
+              <div><div class="label">Producto</div><select class="select"><option>Gateway</option><option>Efactura</option><option>DCOP</option></select></div>
+              <div><div class="label">Ambiente</div><select class="select"><option>Producción</option><option>Staging</option><option>Desarrollo</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-head"><h3>Canales habilitados</h3><small style="color:var(--text-3);font-size:12px">Selecciona los canales de salida</small></div>
+          <div class="card-body">
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="chip on"><i class="mdi mdi-printer"></i> PE</button>
+              <button class="chip on"><i class="mdi mdi-email-outline"></i> EN</button>
+              <button class="chip"><i class="mdi mdi-printer-3d"></i> IMP</button>
+              <button class="chip on"><i class="mdi mdi-monitor"></i> DIG</button>
+              <button class="chip"><i class="mdi mdi-message-text-outline"></i> SMS</button>
+              <button class="chip"><i class="mdi mdi-file-document-outline"></i> DEE</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion" id="configAcc"></div>
+      </section>
+
+      <!-- ===================================================
+           SCHEMAS VIEW
+           =================================================== -->
+      <section class="view" id="view-schemas">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Esquemas de mapeo</h1>
+            <p class="page-sub">Transformación de estructuras XML/JSON entre orígenes y destinos</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-play-outline"></i>Simular</button>
+            <button class="btn btn-primary"><i class="mdi mdi-content-save-outline"></i>Guardar mapeo</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div style="display:flex;gap:8px;align-items:center">
+              <h3>FORE-014</h3>
+              <span class="badge b-primary">DIAN_Invoice_v2.1</span>
+              <span style="color:var(--text-4)">→</span>
+              <span class="badge b-purple">Internal_Invoice_v1</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="chip on">Árbol</button>
+              <button class="chip">JSON</button>
+              <button class="chip">XML</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tree-grid">
+              <div class="tree">
+                <div style="color:var(--text-3);font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Origen (XML)</div>
+                <div class="tree-node dir open">Invoice<span class="schema-pill">complex</span>
+                  <div class="tree-children">
+                    <div class="tree-node">cufe<span class="schema-pill">string</span></div>
+                    <div class="tree-node">issueDate<span class="schema-pill">date</span></div>
+                    <div class="tree-node dir open">supplier
+                      <div class="tree-children">
+                        <div class="tree-node">nit<span class="schema-pill">string</span></div>
+                        <div class="tree-node">name<span class="schema-pill">string</span></div>
+                      </div>
+                    </div>
+                    <div class="tree-node dir">customer
+                      <div class="tree-children" style="display:none"></div>
+                    </div>
+                    <div class="tree-node">total<span class="schema-pill">decimal</span></div>
+                    <div class="tree-node">taxAmount<span class="schema-pill">decimal</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tree-arrow"><i class="mdi mdi-arrow-right-bold"></i></div>
+
+              <div class="tree">
+                <div style="color:var(--text-3);font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Destino (JSON)</div>
+                <div class="tree-node dir open">invoice<span class="schema-pill">object</span>
+                  <div class="tree-children">
+                    <div class="tree-node">id<span class="schema-pill">string</span></div>
+                    <div class="tree-node">date<span class="schema-pill">ISO8601</span></div>
+                    <div class="tree-node dir open">issuer
+                      <div class="tree-children">
+                        <div class="tree-node">taxId<span class="schema-pill">string</span></div>
+                        <div class="tree-node">legalName<span class="schema-pill">string</span></div>
+                      </div>
+                    </div>
+                    <div class="tree-node dir">recipient
+                      <div class="tree-children" style="display:none"></div>
+                    </div>
+                    <div class="tree-node">amount<span class="schema-pill">number</span></div>
+                    <div class="tree-node">vat<span class="schema-pill">number</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--border)">
+              <div style="font-size:12px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Reglas de transformación activas</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <span class="badge b-primary"><i class="mdi mdi-function-variant"></i> cufe → id</span>
+                <span class="badge b-primary"><i class="mdi mdi-function-variant"></i> issueDate → date (ISO8601)</span>
+                <span class="badge b-primary"><i class="mdi mdi-function-variant"></i> supplier.nit → issuer.taxId</span>
+                <span class="badge b-primary"><i class="mdi mdi-function-variant"></i> total → amount</span>
+                <span class="badge b-warn"><i class="mdi mdi-alert-outline"></i> taxAmount: needs decimal cast</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           AUDIT VIEW
+           =================================================== -->
+      <section class="view" id="view-audit">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Auditoría</h1>
+            <p class="page-sub">Historial inmutable de todas las acciones del sistema</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn"><i class="mdi mdi-download-outline"></i>Exportar logs</button>
+          </div>
+        </div>
+        <div class="card">
+          <table class="table">
+            <thead><tr><th>Timestamp</th><th>Usuario</th><th>Acción</th><th>Recurso</th><th>IP</th><th>Resultado</th></tr></thead>
+            <tbody id="auditBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           INTEGRATIONS VIEW
+           =================================================== -->
+      <section class="view" id="view-integrations">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Integraciones</h1>
+            <p class="page-sub">Conexiones con plataformas externas</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px" id="integrationsGrid"></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============= DRAWER (task detail) ============= -->
+<div class="drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
+<aside class="drawer" id="taskDrawer">
+  <div class="drawer-head">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span class="id-pill">FORE-014</span>
+        <span class="badge b-warn b-dot">En desarrollo</span>
+        <span class="pri pri-high">ALTA</span>
+      </div>
+      <h2 id="drawerTitle">Integración DIAN electrónica v2</h2>
+    </div>
+    <button class="icon-btn" onclick="closeDrawer()"><i class="mdi mdi-close" style="font-size:22px"></i></button>
+  </div>
+  <div class="drawer-body">
+    <div class="tabs">
+      <div class="tab on" data-tab="info">Información</div>
+      <div class="tab" data-tab="timeline">Timeline</div>
+      <div class="tab" data-tab="chat">Comentarios</div>
+      <div class="tab" data-tab="files">Archivos</div>
+    </div>
+
+    <div class="tab-pane" data-pane="info">
+      <dl class="dl">
+        <dt>Cliente</dt><dd>Cliente XYZ S.A.S.</dd>
+        <dt>Producto</dt><dd>Efactura</dd>
+        <dt>Solicitante</dt><dd>Jhon Carvajal <small style="color:var(--text-3)">(autocompletado)</small></dd>
+        <dt>Estado actual</dt><dd><span class="badge b-warn b-dot">En desarrollo</span></dd>
+        <dt>Tipo</dt><dd><span class="badge b-primary">FORE · Requerimiento</span></dd>
+        <dt>Tiempo estimado</dt><dd>32 horas</dd>
+        <dt>Horas invertidas</dt><dd>18.5 horas <small style="color:var(--text-3)">(58%)</small></dd>
+        <dt>Fecha entrega</dt><dd>17 Mayo 2026</dd>
+        <dt>QA asignado</dt><dd>Maria López</dd>
+      </dl>
+
+      <div style="margin-top:18px">
+        <div class="label">Progreso global</div>
+        <div class="progress-row" style="margin-top:6px">
+          <div class="progress" style="flex:1"><i style="width:58%"></i></div>
+          <span>58%</span>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="advanceState()"><i class="mdi mdi-arrow-right-bold"></i>Avanzar estado</button>
+        <button class="btn"><i class="mdi mdi-pencil"></i>Editar</button>
+        <button class="btn"><i class="mdi mdi-paperclip"></i>Adjuntar</button>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-pane="timeline" style="display:none">
+      <div class="timeline">
+        <div class="tl-item done"><b>Tarea creada</b><small>02 May 2026 · 09:14 · Jhon Carvajal</small><p>Tarea creada y sincronizada con Teamwork (TW-2841)</p></div>
+        <div class="tl-item done"><b>Checklist funcional completado</b><small>03 May 2026 · 16:22 · Ana Vega</small><p>12 de 12 ítems aprobados. Documento FORE adjunto.</p></div>
+        <div class="tl-item done"><b>Estimación cargada</b><small>04 May 2026 · 10:00 · Jhon Carvajal</small><p>Esfuerzo estimado: 32h · Confianza: alta</p></div>
+        <div class="tl-item done"><b>Inicio de desarrollo</b><small>05 May 2026 · 08:30</small><p>Branch creado: feat/dian-wsse-v2</p></div>
+        <div class="tl-item"><b>En desarrollo</b><small>actual · 18.5h invertidas</small><p>Trabajando en firma WSSE/XAdES dinámica con xmlsig</p></div>
+        <div class="tl-item" style="opacity:.5"><b>Pruebas calidad</b><small>pendiente</small></div>
+        <div class="tl-item" style="opacity:.5"><b>Aprobación cliente</b><small>pendiente</small></div>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-pane="chat" style="display:none">
+      <div class="chat" id="chatList">
+        <div class="chat-msg">
+          <div class="avatar" style="width:32px;height:32px;font-size:11px">ML</div>
+          <div>
+            <div class="chat-bubble">Confirma si vamos a usar StatusCode 02 o 04 para la respuesta diferida. El cliente preguntó.</div>
+            <div class="chat-meta">Maria López · hace 2 h</div>
+          </div>
+        </div>
+        <div class="chat-msg me">
+          <div>
+            <div class="chat-bubble">Vamos con 02 para diferido y 04 sólo cuando el documento queda en cola de validación manual. Documenté el árbol de decisión en la wiki.</div>
+            <div class="chat-meta" style="text-align:right">Yo · hace 1 h</div>
+          </div>
+        </div>
+        <div class="chat-msg">
+          <div class="avatar" style="width:32px;height:32px;font-size:11px;background:linear-gradient(135deg,#f59e0b,#ef4444)">AV</div>
+          <div>
+            <div class="chat-bubble">Ya está el caso de prueba para CLAIMED_ROLE = "third party". Subí archivo a evidencias.</div>
+            <div class="chat-meta">Ana Vega · hace 30 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input">
+        <input class="input" placeholder="Escribe un comentario..." id="chatInput" />
+        <button class="btn btn-primary" onclick="sendChat()"><i class="mdi mdi-send"></i></button>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-pane="files" style="display:none">
+      <div class="file-card"><div class="file-ico"><i class="mdi mdi-file-document-outline"></i></div><div class="file-info"><b>FORE-014_requerimiento.pdf</b><small>2.3 MB · subido 02 May</small></div><button class="icon-btn"><i class="mdi mdi-download" style="font-size:18px"></i></button></div>
+      <div class="file-card"><div class="file-ico" style="background:var(--purple-bg);color:var(--purple)"><i class="mdi mdi-file-excel-outline"></i></div><div class="file-info"><b>estimacion_FORE-014.xlsx</b><small>48 KB · subido 04 May</small></div><button class="icon-btn"><i class="mdi mdi-download" style="font-size:18px"></i></button></div>
+      <div class="file-card"><div class="file-ico" style="background:var(--info-bg);color:var(--info)"><i class="mdi mdi-file-xml-box"></i></div><div class="file-info"><b>schema_DIAN_v2.xsd</b><small>156 KB · subido 05 May</small></div><button class="icon-btn"><i class="mdi mdi-download" style="font-size:18px"></i></button></div>
+      <div class="file-card"><div class="file-ico" style="background:var(--ok-bg);color:var(--ok)"><i class="mdi mdi-image-outline"></i></div><div class="file-info"><b>diagrama_arquitectura.png</b><small>892 KB · subido 06 May</small></div><button class="icon-btn"><i class="mdi mdi-download" style="font-size:18px"></i></button></div>
+      <button class="btn" style="width:100%;margin-top:8px;justify-content:center;border-style:dashed"><i class="mdi mdi-cloud-upload-outline"></i>Subir archivo</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ============= MODAL: New Task ============= -->
+<div class="modal-mask" id="modalNewTask">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Crear nueva tarea de desarrollo</h3>
+      <button class="icon-btn" onclick="closeModal('modalNewTask')"><i class="mdi mdi-close" style="font-size:20px"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div>
+          <div class="label">Tipo *</div>
+          <select class="select" id="newType">
+            <option value="FORE">FORE — Requerimiento</option>
+            <option value="RECA">RECA — Cambio</option>
+            <option value="MIG">MIG — Migración</option>
+          </select>
+        </div>
+        <div>
+          <div class="label">Prioridad *</div>
+          <select class="select" id="newPri"><option>Baja</option><option selected>Media</option><option>Alta</option><option>Crítica</option></select>
+        </div>
+        <div class="span-2">
+          <div class="label">Nombre de la tarea *</div>
+          <input class="input" id="newName" placeholder="Ej: Integración con pasarela de pagos PSE" />
+        </div>
+        <div class="span-2">
+          <div class="label">Descripción</div>
+          <textarea class="input" id="newDesc" placeholder="Detalle del requerimiento, contexto, criterios de aceptación..."></textarea>
+        </div>
+        <div>
+          <div class="label">Cliente *</div>
+          <select class="select"><option>Cliente XYZ S.A.S.</option><option>Banco Andino</option><option>DIAN</option></select>
+        </div>
+        <div>
+          <div class="label">Producto *</div>
+          <select class="select"><option>Gateway</option><option>Efactura</option><option>DCOP</option></select>
+        </div>
+        <div>
+          <div class="label">Fecha de entrega</div>
+          <input type="date" class="input" />
+        </div>
+        <div>
+          <div class="label">Responsable</div>
+          <select class="select"><option>Jhon Carvajal</option><option>Carlos Ríos</option><option>Andrea Pérez</option></select>
+        </div>
+        <div class="span-2">
+          <div class="label">Solicitante</div>
+          <input class="input" value="Jhon Carvajal (usuario actual)" readonly style="background:var(--bg-2);color:var(--text-3)" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modalNewTask')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createTask()"><i class="mdi mdi-check"></i>Crear tarea</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= MODAL: New Case ============= -->
+<div class="modal-mask" id="modalNewCase">
+  <div class="modal">
+    <div class="modal-head"><h3>Crear caso de soporte</h3><button class="icon-btn" onclick="closeModal('modalNewCase')"><i class="mdi mdi-close" style="font-size:20px"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div><div class="label">Cliente *</div><select class="select"><option>Cliente XYZ</option><option>Banco Andino</option></select></div>
+        <div><div class="label">Categoría *</div><select class="select"><option>Incidente</option><option>Solicitud</option><option>Problema</option></select></div>
+        <div><div class="label">Prioridad *</div><select class="select"><option>Baja</option><option>Media</option><option>Alta</option><option>Crítica</option></select></div>
+        <div><div class="label">Producto afectado *</div><select class="select"><option>Gateway</option><option>Efactura</option></select></div>
+        <div class="span-2"><div class="label">Descripción</div><textarea class="input" placeholder="Detalle del problema..."></textarea></div>
+        <div class="span-2"><div class="label">Evidencias</div><button class="btn" style="width:100%;justify-content:center;border-style:dashed"><i class="mdi mdi-cloud-upload-outline"></i>Adjuntar capturas o logs</button></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modalNewCase')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createCase()"><i class="mdi mdi-check"></i>Crear caso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= MODAL: New Param ============= -->
+<div class="modal-mask" id="modalNewParam">
+  <div class="modal">
+    <div class="modal-head"><h3>Agregar parámetro</h3><button class="icon-btn" onclick="closeModal('modalNewParam')"><i class="mdi mdi-close" style="font-size:20px"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="span-2"><div class="label">Nombre *</div><input class="input" placeholder="EJ: MAX_RETRY_ATTEMPTS" style="font-family:var(--font-mono)" /></div>
+        <div class="span-2"><div class="label">Descripción</div><textarea class="input" placeholder="Para qué se usa este parámetro..."></textarea></div>
+        <div><div class="label">Tipo</div><select class="select"><option>String</option><option>Number</option><option>Boolean</option><option>JSON</option></select></div>
+        <div><div class="label">Valor</div><input class="input" placeholder="Valor inicial" /></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modalNewParam')">Cancelar</button>
+      <button class="btn btn-primary" onclick="toast('Parámetro creado','ok','El parámetro fue guardado correctamente.');closeModal('modalNewParam')"><i class="mdi mdi-check"></i>Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= TOASTS ============= -->
+<div class="toasts" id="toasts"></div>
+
+<script>
+/* ================================================================
+   STATE & DATA
+   ================================================================ */
+const WORKFLOW_STATES = [
+  {key:'create', label:'Creación', role:'Funcional', ico:'plus-circle-outline'},
+  {key:'check_func', label:'Checklist funcional', role:'Funcional', ico:'clipboard-check-outline'},
+  {key:'fore_reca', label:'FORE / RECA / MIG', role:'Funcional', ico:'file-document-outline'},
+  {key:'estimation', label:'Estimación', role:'Desarrollador', ico:'calculator-variant'},
+  {key:'dev_start', label:'Inicio desarrollo', role:'Desarrollador', ico:'code-tags'},
+  {key:'check_dev', label:'Checklist desarrollo', role:'Desarrollador', ico:'clipboard-text-clock'},
+  {key:'qa', label:'Pruebas calidad', role:'Calidad', ico:'flask-outline'},
+  {key:'bugs', label:'Solución bugs', role:'Desarrollador', ico:'bug-outline'},
+  {key:'approve', label:'Aprobación cliente', role:'Comercial', ico:'shield-check-outline'},
+  {key:'committee', label:'Comité cambios', role:'Desarrollador', ico:'account-group-outline'},
+  {key:'support_handoff', label:'Entrega soporte', role:'Desarrollador', ico:'hand-coin-outline'},
+  {key:'prod', label:'Paso producción', role:'Desarrollador', ico:'rocket-launch-outline'},
+  {key:'ticket', label:'Ingreso caso', role:'Usuario', ico:'ticket-outline'},
+  {key:'solved', label:'Solución caso', role:'Soporte', ico:'check-all'},
+];
+let currentState = 4; // Inicio desarrollo
+
+const TASKS = [
+  {id:'FORE-014',type:'FORE',name:'Integración DIAN electrónica v2',state:'En desarrollo',badge:'b-warn',resp:'Jhon Carvajal',respIni:'JC',pri:'Alta',priCls:'pri-high',date:'17/05/26',progress:58},
+  {id:'RECA-022',type:'RECA',name:'Gateway API · refactor SQS',state:'QA',badge:'b-info',resp:'Maria López',respIni:'ML',pri:'Media',priCls:'pri-med',date:'20/05/26',progress:75},
+  {id:'MIG-003',type:'MIG',name:'Migración Colfondos · pension files',state:'Bloqueado',badge:'b-err',resp:'Carlos Ríos',respIni:'CR',pri:'Crítica',priCls:'pri-crit',date:'24/05/26',progress:35},
+  {id:'FORE-017',type:'FORE',name:'WSSE/XAdES Signatures dinámicas',state:'Checklist dev',badge:'b-purple',resp:'Jhon Carvajal',respIni:'JC',pri:'Alta',priCls:'pri-high',date:'28/05/26',progress:42},
+  {id:'RECA-024',type:'RECA',name:'Bedrock Agent · NL Analytics',state:'En desarrollo',badge:'b-warn',resp:'Andrea Pérez',respIni:'AP',pri:'Media',priCls:'pri-med',date:'30/05/26',progress:25},
+  {id:'FORE-019',type:'FORE',name:'Lifecycle DynamoDB → Glacier',state:'Aprobación',badge:'b-info',resp:'Jhon Carvajal',respIni:'JC',pri:'Baja',priCls:'pri-low',date:'05/06/26',progress:90},
+  {id:'MIG-005',type:'MIG',name:'Reconciliación intercompañía',state:'Producción',badge:'b-ok',resp:'Ana Vega',respIni:'AV',pri:'Media',priCls:'pri-med',date:'10/06/26',progress:100},
+  {id:'RECA-026',type:'RECA',name:'Notificaciones SES · multitenant',state:'Estimación',badge:'b-primary',resp:'Carlos Ríos',respIni:'CR',pri:'Media',priCls:'pri-med',date:'15/06/26',progress:10},
+];
+
+const SUPPORT = [
+  {id:'SUP-1042',cli:'Cliente XYZ',pri:'Crítica',priCls:'pri-crit',resp:'Luis Castro',respIni:'LC',state:'En análisis',badge:'b-warn',sla:25,created:'14/05 09:12',updated:'hace 12 min'},
+  {id:'SUP-1041',cli:'Banco Andino',pri:'Alta',priCls:'pri-high',resp:'Soporte L2',respIni:'L2',state:'Escalado',badge:'b-err',sla:45,created:'14/05 08:30',updated:'hace 1 h'},
+  {id:'SUP-1040',cli:'Cliente XYZ',pri:'Media',priCls:'pri-med',resp:'Ana Vega',respIni:'AV',state:'En solución',badge:'b-info',sla:78,created:'13/05 16:42',updated:'hace 2 h'},
+  {id:'SUP-1039',cli:'DIAN Test',pri:'Baja',priCls:'pri-low',resp:'No asignado',respIni:'??',state:'Nuevo',badge:'b-purple',sla:92,created:'13/05 14:01',updated:'hace 4 h'},
+  {id:'SUP-1038',cli:'Banco Andino',pri:'Alta',priCls:'pri-high',resp:'Maria López',respIni:'ML',state:'Asignado',badge:'b-primary',sla:88,created:'13/05 11:23',updated:'hace 5 h'},
+  {id:'SUP-1037',cli:'Cliente XYZ',pri:'Media',priCls:'pri-med',resp:'Carlos Ríos',respIni:'CR',state:'Resuelto',badge:'b-ok',sla:100,created:'12/05 09:18',updated:'hace 1 día'},
+];
+
+const PARAMS = [
+  {n:'MAX_RETRY_ATTEMPTS',d:'Reintentos máximos para llamadas a la DIAN',v:'5',t:'Number',m:'hace 2 días'},
+  {n:'SES_FROM_ADDRESS',d:'Dirección de correo remitente Gateway',v:'no-reply@Gateway.co',t:'String',m:'hace 1 semana'},
+  {n:'WSSE_TIMEOUT_MS',d:'Timeout para firma WSSE/XAdES',v:'15000',t:'Number',m:'hace 3 días'},
+  {n:'ENABLE_BEDROCK_AGENT',d:'Activa el agente de Bedrock para analytics',v:'true',t:'Boolean',m:'hoy'},
+  {n:'DYNAMO_TABLE_TIER',d:'Tier de almacenamiento por defecto',v:'STANDARD',t:'String',m:'hace 5 días'},
+  {n:'SQS_VISIBILITY_TIMEOUT',d:'Visibility timeout para retry',v:'300',t:'Number',m:'hace 2 semanas'},
+  {n:'DIAN_ENV',d:'Ambiente DIAN: habilitacion / produccion',v:'habilitacion',t:'String',m:'hoy'},
+];
+
+const KANBAN_COLS = [
+  {key:'todo',label:'Por hacer',color:'#94a3b8',tasks:[
+    {id:'FORE-021',name:'Validar dataset DIAN 2025',pri:'pri-med',resp:'AV'},
+    {id:'RECA-028',name:'Migrar webhook Twilio',pri:'pri-low',resp:'CR'},
+  ]},
+  {key:'doing',label:'En progreso',color:'#3b82f6',tasks:[
+    {id:'FORE-014',name:'Integración DIAN electrónica v2',pri:'pri-high',resp:'JM'},
+    {id:'FORE-017',name:'WSSE Signatures dinámicas',pri:'pri-high',resp:'JM'},
+    {id:'RECA-024',name:'Bedrock Agent · NL Analytics',pri:'pri-med',resp:'AP'},
+  ]},
+  {key:'review',label:'En revisión QA',color:'#f59e0b',tasks:[
+    {id:'RECA-022',name:'Refactor SQS Gateway',pri:'pri-med',resp:'ML'},
+    {id:'FORE-019',name:'Lifecycle DynamoDB',pri:'pri-low',resp:'JM'},
+  ]},
+  {key:'done',label:'Producción',color:'#22c55e',tasks:[
+    {id:'MIG-005',name:'Reconciliación intercompañía',pri:'pri-med',resp:'AV'},
+    {id:'RECA-018',name:'CSV processor refactor',pri:'pri-low',resp:'JM'},
+  ]},
+];
+
+const AUDIT = [
+  ['2026-05-15 11:42:03','jhon.carvajal','task.create','FORE-021','190.85.x.x','OK'],
+  ['2026-05-15 11:31:18','maria.lopez','qa.approve','FORE-014','201.234.x.x','OK'],
+  ['2026-05-15 10:55:01','jhon.carvajal','deploy.prod','RECA-022','190.85.x.x','OK'],
+  ['2026-05-15 10:22:45','ana.vega','checklist.complete','FORE-017','181.x.x.x','OK'],
+  ['2026-05-15 09:18:09','carlos.rios','bug.report','MIG-003','190.85.x.x','OK'],
+  ['2026-05-15 08:42:11','system','workflow.transition','FORE-014','-','OK'],
+  ['2026-05-14 17:30:22','jhon.carvajal','param.update','WSSE_TIMEOUT_MS','190.85.x.x','OK'],
+  ['2026-05-14 16:15:08','unknown','login.failed','-','45.x.x.x','FAIL'],
+];
+
+const INTEGRATIONS = [
+  {n:'Teamwork',d:'Sincronización bidireccional de tareas',ico:'mdi-account-group',color:'#fb923c',on:true},
+  {n:'Microsoft Teams',d:'Notificaciones en canales de proyecto',ico:'mdi-microsoft-teams',color:'#6366f1',on:true},
+  {n:'Jira',d:'Importación de bugs e historias',ico:'mdi-jira',color:'#2684ff',on:true},
+  {n:'Amazon SES',d:'Envío de correos transaccionales',ico:'mdi-email-fast-outline',color:'#ff9900',on:true},
+  {n:'GitHub',d:'Sincronización de commits y PRs',ico:'mdi-github',color:'#0f1729',on:true},
+  {n:'Slack',d:'Notificaciones alternativas',ico:'mdi-slack',color:'#4a154b',on:false},
+];
+
+const CHECKLIST_GROUPS = [
+  {title:'Checklist General',icon:'clipboard-outline',color:'var(--text-3)',items:[
+    {n:'Verificar alcance del requerimiento',done:true,who:'AV',date:'02 May',pri:'Alta'},
+    {n:'Validar disponibilidad de stakeholders',done:true,who:'AV',date:'02 May',pri:'Media'},
+    {n:'Confirmar prioridad con cliente',done:true,who:'AV',date:'03 May',pri:'Alta'},
+    {n:'Documentar contexto inicial',done:false,who:'JM',date:'04 May',pri:'Media'},
+  ]},
+  {title:'Checklist Funcional',icon:'account-tie-outline',color:'var(--primary)',items:[
+    {n:'Diagrama de flujo aprobado por cliente',done:true,who:'AV',date:'03 May',pri:'Alta'},
+    {n:'Mock-ups validados',done:true,who:'AV',date:'03 May',pri:'Media'},
+    {n:'Documento FORE diligenciado completamente',done:true,who:'AV',date:'04 May',pri:'Alta'},
+    {n:'Criterios de aceptación definidos',done:false,who:'AV',date:'04 May',pri:'Crítica'},
+    {n:'Casos de prueba funcionales documentados',done:false,who:'AV',date:'05 May',pri:'Alta'},
+  ]},
+  {title:'Checklist Desarrollo',icon:'code-tags',color:'var(--purple)',items:[
+    {n:'Branch creado desde develop',done:true,who:'JM',date:'05 May',pri:'Baja'},
+    {n:'Tests unitarios cobertura > 80%',done:false,who:'JM',date:'10 May',pri:'Alta'},
+    {n:'Code review aprobado',done:false,who:'CR',date:'12 May',pri:'Alta'},
+    {n:'Documentación técnica actualizada',done:false,who:'JM',date:'14 May',pri:'Media'},
+    {n:'Linters y formateo aplicados',done:false,who:'JM',date:'15 May',pri:'Baja'},
+  ]},
+  {title:'Checklist Calidad',icon:'flask-outline',color:'var(--warn)',items:[
+    {n:'Plan de pruebas ejecutado',done:false,who:'ML',date:'16 May',pri:'Alta'},
+    {n:'Pruebas de regresión completadas',done:false,who:'ML',date:'17 May',pri:'Alta'},
+    {n:'Pruebas de carga validadas',done:false,who:'ML',date:'17 May',pri:'Media'},
+    {n:'Reporte QA generado y firmado',done:false,who:'ML',date:'18 May',pri:'Alta'},
+  ]},
+  {title:'Checklist Producción',icon:'rocket-launch-outline',color:'var(--ok)',items:[
+    {n:'Backup pre-deploy realizado',done:false,who:'JM',date:'20 May',pri:'Crítica'},
+    {n:'Variables de entorno verificadas',done:false,who:'JM',date:'20 May',pri:'Crítica'},
+    {n:'Rollback plan documentado',done:false,who:'JM',date:'20 May',pri:'Alta'},
+    {n:'Monitoreo CloudWatch configurado',done:false,who:'JM',date:'20 May',pri:'Alta'},
+  ]},
+  {title:'Checklist Soporte',icon:'lifebuoy',color:'var(--info)',items:[
+    {n:'Documentación operativa entregada',done:false,who:'JM',date:'21 May',pri:'Alta'},
+    {n:'Capacitación a equipo soporte',done:false,who:'JM',date:'22 May',pri:'Media'},
+    {n:'Runbook de incidentes creado',done:false,who:'JM',date:'22 May',pri:'Alta'},
+  ]},
+];
+
+const CONFIG_SECTIONS = [
+  {title:'Generales',icon:'cog-outline',items:[
+    {label:'Zona horaria',value:'America/Bogota (UTC-5)',type:'select'},
+    {label:'Idioma por defecto',value:'Español (Colombia)',type:'select'},
+    {label:'Formato de fecha',value:'DD/MM/YYYY',type:'select'},
+  ]},
+  {title:'Integraciones',icon:'puzzle-outline',items:[
+    {label:'Sincronización Teamwork',value:true,type:'switch'},
+    {label:'Webhook Jira',value:true,type:'switch'},
+    {label:'Notificaciones Teams',value:false,type:'switch'},
+  ]},
+  {title:'Notificaciones',icon:'bell-outline',items:[
+    {label:'Email al cambiar estado',value:true,type:'switch'},
+    {label:'Notificaciones in-app',value:true,type:'switch'},
+    {label:'Resumen diario por correo',value:false,type:'switch'},
+  ]},
+  {title:'Producción',icon:'server-network-outline',items:[
+    {label:'Modo mantenimiento',value:false,type:'switch'},
+    {label:'Auto-rollback en error crítico',value:true,type:'switch'},
+    {label:'Pre-validación de deploys',value:true,type:'switch'},
+  ]},
+  {title:'Seguridad',icon:'shield-lock-outline',items:[
+    {label:'Autenticación 2FA obligatoria',value:true,type:'switch'},
+    {label:'Bloqueo tras 5 intentos fallidos',value:true,type:'switch'},
+    {label:'Auditoría completa de acciones',value:true,type:'switch'},
+  ]},
+];
+
+/* ================================================================
+   RENDER
+   ================================================================ */
+function avatarBg(initials){
+  const palettes = [
+    'linear-gradient(135deg,#0ea5e9,#6366f1)',
+    'linear-gradient(135deg,#f59e0b,#ef4444)',
+    'linear-gradient(135deg,#10b981,#0ea5e9)',
+    'linear-gradient(135deg,#8b5cf6,#ec4899)',
+    'linear-gradient(135deg,#06b6d4,#3b82f6)',
+    'linear-gradient(135deg,#f43f5e,#a855f7)',
+  ];
+  let h=0; for(const c of initials) h=(h*31+c.charCodeAt(0))|0;
+  return palettes[Math.abs(h)%palettes.length];
+}
+
+/* WORKFLOW */
+function renderSteps(){
+  const el = document.getElementById('stateSteps');
+  el.innerHTML = WORKFLOW_STATES.map((s,i)=>{
+    const cls = i<currentState?'done':i===currentState?'current':'';
+    const dot = i<currentState?`<i class="mdi mdi-check"></i>`:i+1;
+    return `<div class="step ${cls}">
+      <div class="step-dot">${dot}</div>
+      <div class="step-label">${s.label}</div>
+      <div class="step-role">${s.role}</div>
+    </div>`;
+  }).join('');
+}
+
+/* BARS */
+function renderBars(){
+  const data=[
+    [12,8,4],[18,9,3],[22,11,5],[16,7,2],[24,12,6],
+    [28,14,5],[32,15,4],[26,10,3],[34,16,6],[29,13,4],[37,18,5],[42,20,6]
+  ];
+  const days=['L','M','M','J','V','S','D','L','M','M','J','V'];
+  const max=Math.max(...data.map(d=>d.reduce((a,b)=>a+b,0)));
+  document.getElementById('bars').innerHTML = data.map((d,i)=>{
+    const total=d.reduce((a,b)=>a+b,0);
+    const h=(total/max)*100;
+    const p1=(d[0]/total)*h, p2=(d[1]/total)*h, p3=(d[2]/total)*h;
+    return `<div class="bar-col">
+      <div class="bar-stack" style="height:${h}%">
+        <div class="bar-seg" style="height:${p1}%;background:var(--primary)"></div>
+        <div class="bar-seg" style="height:${p2}%;background:var(--primary-3)"></div>
+        <div class="bar-seg" style="height:${p3}%;background:var(--border-2)"></div>
+      </div>
+      <div class="bar-label">${days[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+/* TASKS table */
+function renderTasks(){
+  document.getElementById('tasksBody').innerHTML = TASKS.map(t=>`
+    <tr>
+      <td><span class="id-pill">${t.id}</span></td>
+      <td><span class="badge b-${t.type==='FORE'?'primary':t.type==='RECA'?'purple':'info'}">${t.type}</span></td>
+      <td style="font-weight:600;cursor:pointer" onclick="openDrawer('${t.id}','${t.name.replace(/'/g,"\\'")}')">${t.name}</td>
+      <td><span class="badge ${t.badge} b-dot">${t.state}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="mini-avatar" style="background:${avatarBg(t.respIni)}">${t.respIni}</div><span style="font-size:12.5px">${t.resp}</span></div></td>
+      <td><span class="pri ${t.priCls}">${t.pri.toUpperCase()}</span></td>
+      <td style="color:var(--text-3);font-family:var(--font-mono);font-size:12px">${t.date}</td>
+      <td><div class="progress-row"><div class="progress" style="width:80px"><i style="width:${t.progress}%"></i></div><span>${t.progress}%</span></div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" onclick="openDrawer('${t.id}','${t.name.replace(/'/g,"\\'")}')" title="Ver detalle"><i class="mdi mdi-eye-outline"></i></button>
+        <button class="icon-btn" title="Editar"><i class="mdi mdi-pencil-outline"></i></button>
+        <button class="icon-btn" title="Adjuntar"><i class="mdi mdi-paperclip"></i></button>
+        <button class="icon-btn" title="Más"><i class="mdi mdi-dots-vertical"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+/* SUPPORT table */
+function renderSupport(){
+  document.getElementById('supportBody').innerHTML = SUPPORT.map(s=>`
+    <tr>
+      <td><span class="id-pill">${s.id}</span></td>
+      <td style="font-weight:500">${s.cli}</td>
+      <td><span class="pri ${s.priCls}">${s.pri.toUpperCase()}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="mini-avatar" style="background:${avatarBg(s.respIni)}">${s.respIni}</div><span style="font-size:12.5px">${s.resp}</span></div></td>
+      <td><span class="badge ${s.badge} b-dot">${s.state}</span></td>
+      <td>
+        <div class="sla">
+          <div class="sla-ring" style="--p:${s.sla};background:conic-gradient(${s.sla>70?'var(--ok)':s.sla>40?'var(--warn)':'var(--err)'} calc(${s.sla}*1%), var(--bg-2) 0)"><span>${s.sla}</span></div>
+          <span style="color:var(--text-3)">${s.sla}%</span>
+        </div>
+      </td>
+      <td style="color:var(--text-3);font-family:var(--font-mono);font-size:11.5px">${s.created}</td>
+      <td style="color:var(--text-3);font-size:12px">${s.updated}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="Ver"><i class="mdi mdi-eye-outline"></i></button>
+        <button class="icon-btn" title="Asignar"><i class="mdi mdi-account-arrow-right-outline"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+/* PARAMS */
+function renderParams(){
+  document.getElementById('paramsBody').innerHTML = PARAMS.map(p=>`
+    <tr>
+      <td><code style="font-family:var(--font-mono);font-size:12px;color:var(--primary);font-weight:600">${p.n}</code></td>
+      <td style="color:var(--text-2);font-size:12.5px">${p.d}</td>
+      <td><code style="font-family:var(--font-mono);font-size:12px;background:var(--bg-2);padding:2px 7px;border-radius:5px">${p.v}</code></td>
+      <td><span class="badge">${p.t}</span></td>
+      <td style="color:var(--text-3);font-size:12px">${p.m}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="Editar"><i class="mdi mdi-pencil-outline"></i></button>
+        <button class="icon-btn" title="Eliminar"><i class="mdi mdi-trash-can-outline"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+/* CHECKLIST */
+function renderChecklists(){
+  const el = document.getElementById('checklistAcc');
+  el.innerHTML = CHECKLIST_GROUPS.map((g,gi)=>{
+    const total=g.items.length;
+    const done=g.items.filter(i=>i.done).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="acc ${gi===1?'open':''}">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <i class="mdi mdi-chevron-right acc-chev"></i>
+        <i class="mdi mdi-${g.icon}" style="color:${g.color};font-size:20px"></i>
+        <div class="acc-title">${g.title}</div>
+        <div class="acc-meta">
+          <span class="acc-progress">${done}/${total}</span>
+          <div class="progress" style="width:80px"><i style="width:${pct}%"></i></div>
+          ${pct===100?'<span class="badge b-ok b-dot">Completo</span>':''}
+        </div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          ${g.items.map((it,ii)=>`
+            <div class="checklist-item ${it.done?'done':''}">
+              <div class="check ${it.done?'on':''}" onclick="toggleCheck(this,${gi},${ii})"></div>
+              <div class="check-name">${it.n}</div>
+              <span class="pri pri-${it.pri==='Crítica'?'crit':it.pri==='Alta'?'high':it.pri==='Media'?'med':'low'}">${it.pri.toUpperCase()}</span>
+              <div class="mini-avatar" style="background:${avatarBg(it.who)}" title="${it.who}">${it.who}</div>
+              <div class="check-meta"><i class="mdi mdi-calendar-blank-outline"></i>${it.date}</div>
+              <div class="row-actions">
+                <button class="icon-btn" title="Adjuntar"><i class="mdi mdi-paperclip"></i></button>
+                <button class="icon-btn" title="Comentar"><i class="mdi mdi-comment-text-outline"></i></button>
+              </div>
+            </div>
+          `).join('')}
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px"><i class="mdi mdi-plus"></i>Agregar item</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleAcc(el){
+  const acc = el.parentElement;
+  acc.classList.toggle('open');
+}
+
+function toggleCheck(el,gi,ii){
+  CHECKLIST_GROUPS[gi].items[ii].done = !CHECKLIST_GROUPS[gi].items[ii].done;
+  el.classList.toggle('on');
+  el.parentElement.classList.toggle('done');
+
+  const done = CHECKLIST_GROUPS[gi].items.filter(x=>x.done).length;
+  const total = CHECKLIST_GROUPS[gi].items.length;
+
+  if(CHECKLIST_GROUPS[gi].items[ii].done){
+    toast(`${CHECKLIST_GROUPS[gi].title}`,'ok',`Item completado · ${done}/${total} listos.`);
+    if(done===total){
+      setTimeout(()=>{
+        toast('¡Checklist completado!','ok',`${CHECKLIST_GROUPS[gi].title} al 100%. Habilitando siguiente etapa.`);
+        emailPop('siguiente-responsable@cadena.com.co','Checklist completado · próxima etapa habilitada');
+      },800);
+    }
+  }
+  renderChecklists();
+  // Re-open the same acc
+  setTimeout(()=>document.querySelectorAll('.acc')[gi]?.classList.add('open'),10);
+}
+
+/* KANBAN */
+function renderKanban(){
+  document.getElementById('kanbanBoard').innerHTML = KANBAN_COLS.map(c=>`
+    <div class="kan-col" data-col="${c.key}">
+      <div class="kan-col-head">
+        <div class="dot-c" style="background:${c.color}"></div>
+        ${c.label}
+        <span class="count">${c.tasks.length}</span>
+        <button class="icon-btn" style="margin-left:auto;width:24px;height:24px" title="Agregar"><i class="mdi mdi-plus" style="font-size:14px"></i></button>
+      </div>
+      ${c.tasks.map(t=>`
+        <div class="kan-card" draggable="true">
+          <div class="kan-card-top">
+            <span class="id-pill">${t.id}</span>
+            <span class="pri ${t.pri}">${t.pri==='pri-low'?'BAJA':t.pri==='pri-med'?'MEDIA':t.pri==='pri-high'?'ALTA':'CRÍTICA'}</span>
+          </div>
+          <h4>${t.name}</h4>
+          <div class="kan-card-foot">
+            <div class="mini-avatar" style="background:${avatarBg(t.resp)}">${t.resp}</div>
+            <span><i class="mdi mdi-paperclip" style="font-size:13px"></i> 2 · <i class="mdi mdi-comment-text" style="font-size:13px"></i> 5</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+/* CALENDAR */
+function renderCal(){
+  // May 2026: 1 May = Friday (col index 4)
+  const days=['L','M','M','J','V','S','D'];
+  let html = days.map(d=>`<div class="cal-h">${d}</div>`).join('');
+  // May 1 2026 is Friday (Monday-first index = 4)
+  for(let i=0;i<4;i++) html += `<div class="cal-d off">${27+i}</div>`;
+  const events = {3:1,7:1,12:1,15:1,17:1,20:1,24:1,28:1};
+  for(let d=1;d<=31;d++){
+    const cls = d===15?'today':(events[d]?'has':'');
+    html += `<div class="cal-d ${cls}">${d}</div>`;
+  }
+  for(let i=1;i<=7;i++) html += `<div class="cal-d off">${i}</div>`;
+  document.getElementById('cal').innerHTML = html;
+}
+
+/* AUDIT */
+function renderAudit(){
+  document.getElementById('auditBody').innerHTML = AUDIT.map(r=>`
+    <tr>
+      <td style="font-family:var(--font-mono);font-size:11.5px;color:var(--text-3)">${r[0]}</td>
+      <td style="font-weight:500">${r[1]}</td>
+      <td><code style="font-family:var(--font-mono);font-size:11.5px;color:var(--primary)">${r[2]}</code></td>
+      <td>${r[3]==='-'?'<span style="color:var(--text-4)">—</span>':`<span class="id-pill">${r[3]}</span>`}</td>
+      <td style="font-family:var(--font-mono);font-size:11.5px;color:var(--text-3)">${r[4]}</td>
+      <td><span class="badge ${r[5]==='OK'?'b-ok':'b-err'} b-dot">${r[5]}</span></td>
+    </tr>
+  `).join('');
+}
+
+/* INTEGRATIONS */
+function renderIntegrations(){
+  document.getElementById('integrationsGrid').innerHTML = INTEGRATIONS.map(it=>`
+    <div class="card" style="padding:18px">
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:12px">
+        <div style="width:46px;height:46px;border-radius:11px;background:${it.color}22;color:${it.color};display:grid;place-items:center;font-size:26px;flex-shrink:0">
+          <i class="mdi ${it.ico}"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <b style="display:block;font-size:14px;margin-bottom:2px">${it.n}</b>
+          <small style="color:var(--text-3);font-size:12px">${it.d}</small>
+        </div>
+        <div class="switch ${it.on?'on':''}" onclick="this.classList.toggle('on');toast('${it.n}','ok','Integración actualizada.')"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)">
+        <span class="badge ${it.on?'b-ok b-dot':''}">${it.on?'Conectado':'Desconectado'}</span>
+        <button class="btn btn-sm btn-ghost">Configurar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* CONFIG */
+function renderConfig(){
+  document.getElementById('configAcc').innerHTML = CONFIG_SECTIONS.map((s,i)=>`
+    <div class="acc ${i===0?'open':''}">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <i class="mdi mdi-chevron-right acc-chev"></i>
+        <i class="mdi mdi-${s.icon}" style="color:var(--primary);font-size:20px"></i>
+        <div class="acc-title">${s.title}</div>
+        <div class="acc-meta"><span class="acc-progress">${s.items.length} ajustes</span></div>
+      </div>
+      <div class="acc-body"><div class="acc-body-inner">
+        ${s.items.map(it=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 6px;border-bottom:1px solid var(--border)">
+            <div style="font-size:13.5px;font-weight:500">${it.label}</div>
+            ${it.type==='switch'
+              ? `<div class="switch ${it.value?'on':''}" onclick="this.classList.toggle('on')"></div>`
+              : `<select class="select" style="width:240px;height:34px">${[it.value,'Otra opción'].map(o=>`<option>${o}</option>`).join('')}</select>`
+            }
+          </div>
+        `).join('')}
+      </div></div>
+    </div>
+  `).join('');
+}
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+const VIEW_LABELS = {
+  dashboard:'Dashboard',tasks:'Tareas de desarrollo',checklist:'Lista de chequeo',
+  support:'Casos de soporte',kanban:'Vista Kanban',calendar:'Calendario',
+  params:'Parámetros',config:'Configuraciones',schemas:'Esquemas de mapeo',
+  audit:'Auditoría',integrations:'Integraciones'
+};
+document.querySelectorAll('.nav-item').forEach(n=>{
+  n.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+    n.classList.add('active');
+    const v = n.dataset.view;
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+    document.getElementById('view-'+v).classList.add('active');
+    document.getElementById('crumbCurrent').textContent = VIEW_LABELS[v];
+    document.getElementById('content').scrollTop = 0;
+    if(window.innerWidth<880) document.getElementById('app').classList.remove('mobile-open');
+  });
+});
+
+document.getElementById('toggleSidebar').addEventListener('click',()=>{
+  const app = document.getElementById('app');
+  if(window.innerWidth<880){
+    app.classList.toggle('mobile-open');
+  } else {
+    app.classList.toggle('collapsed');
+  }
+});
+
+/* THEME */
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const body = document.body;
+  const newT = body.dataset.theme==='dark'?'light':'dark';
+  body.dataset.theme = newT;
+  document.getElementById('themeIco').className = `mdi mdi-${newT==='dark'?'weather-sunny':'weather-night'}`;
+});
+
+/* TREE SCHEMA */
+document.querySelectorAll('.tree-node.dir').forEach(n=>{
+  n.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    n.classList.toggle('open');
+    const ch = n.querySelector('.tree-children');
+    if(ch) ch.style.display = n.classList.contains('open')?'block':'none';
+  });
+});
+
+/* ================================================================
+   DRAWER
+   ================================================================ */
+function openDrawer(id, name){
+  document.getElementById('drawerTitle').textContent = name;
+  document.querySelector('#taskDrawer .id-pill').textContent = id;
+  document.getElementById('taskDrawer').classList.add('open');
+  document.getElementById('drawerMask').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('taskDrawer').classList.remove('open');
+  document.getElementById('drawerMask').classList.remove('open');
+}
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+    document.querySelector(`[data-pane="${t.dataset.tab}"]`).style.display='block';
+  });
+});
+
+function advanceState(){
+  if(currentState < WORKFLOW_STATES.length-1){
+    currentState++;
+    renderSteps();
+    const next = WORKFLOW_STATES[currentState];
+    toast('Estado avanzado','ok',`Tarea movida a "${next.label}". Notificando al rol ${next.role}.`);
+    setTimeout(()=>{
+      emailPop(`${next.role.toLowerCase()}@cadena.com.co`,`Nueva tarea asignada en estado: ${next.label}`,`La tarea FORE-014 está ahora en tu bandeja. Acción requerida: ${next.label}.`);
+    },600);
+  }
+}
+
+function sendChat(){
+  const inp = document.getElementById('chatInput');
+  const txt = inp.value.trim();
+  if(!txt) return;
+  const list = document.getElementById('chatList');
+  list.insertAdjacentHTML('beforeend',`
+    <div class="chat-msg me">
+      <div>
+        <div class="chat-bubble">${txt}</div>
+        <div class="chat-meta" style="text-align:right">Yo · ahora</div>
+      </div>
+    </div>
+  `);
+  inp.value='';
+  list.scrollTop = list.scrollHeight;
+}
+
+/* ================================================================
+   MODALS
+   ================================================================ */
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-mask').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m) m.classList.remove('open')});
+});
+
+function createTask(){
+  const type = document.getElementById('newType').value;
+  const name = document.getElementById('newName').value || 'Nueva tarea sin nombre';
+  const pri = document.getElementById('newPri').value;
+  const priMap = {Baja:'pri-low',Media:'pri-med',Alta:'pri-high',Crítica:'pri-crit'};
+  const num = String(Math.floor(Math.random()*900)+100);
+  const id = `${type}-${num}`;
+  TASKS.unshift({
+    id, type, name,
+    state:'Creada', badge:'b-primary',
+    resp:'Jhon Carvajal', respIni:'JC',
+    pri, priCls: priMap[pri],
+    date:'—', progress:0
+  });
+  renderTasks();
+  closeModal('modalNewTask');
+  toast('Tarea creada','ok',`La tarea ${id} fue creada exitosamente en Teamwork.`);
+  setTimeout(()=>{
+    emailPop('funcional@cadena.com.co',`Nueva tarea ${id} asignada`,`La tarea "${name}" ha sido creada. Acción requerida: diligenciar checklist funcional.`);
+  },700);
+  document.getElementById('newName').value='';
+  document.getElementById('newDesc').value='';
+}
+
+function createCase(){
+  closeModal('modalNewCase');
+  toast('Caso creado','ok','Ticket SUP-1043 creado y asignado a soporte L1.');
+  setTimeout(()=>emailPop('soporte-l1@cadena.com.co','Nuevo caso de soporte asignado'),600);
+}
+
+/* ================================================================
+   TOASTS + EMAIL POP
+   ================================================================ */
+function toast(title, kind='info', msg=''){
+  const wrap = document.getElementById('toasts');
+  const ico = {ok:'check-circle',warn:'alert',err:'close-circle',info:'information'}[kind] || 'information';
+  const div = document.createElement('div');
+  div.className = `toast ${kind}`;
+  div.innerHTML = `
+    <i class="mdi mdi-${ico} t-ico"></i>
+    <div style="flex:1;min-width:0">
+      <b>${title}</b>
+      ${msg?`<small>${msg}</small>`:''}
+    </div>
+    <button class="icon-btn" style="width:24px;height:24px" onclick="this.parentElement.classList.add('out');setTimeout(()=>this.parentElement?.remove(),250)"><i class="mdi mdi-close" style="font-size:14px"></i></button>
+  `;
+  wrap.appendChild(div);
+  setTimeout(()=>{div.classList.add('out');setTimeout(()=>div.remove(),250)},5000);
+}
+
+function emailPop(to,subject,body){
+  const wrap = document.getElementById('toasts');
+  const div = document.createElement('div');
+  div.className = 'email-pop';
+  div.innerHTML = `
+    <div class="email-pop-head">
+      <i class="mdi mdi-email-fast-outline"></i>
+      Email enviado vía Amazon SES
+      <button class="icon-btn" style="width:24px;height:24px;color:#fff;margin-left:auto" onclick="this.closest('.email-pop').classList.add('out');setTimeout(()=>this.closest('.email-pop')?.remove(),250)"><i class="mdi mdi-close" style="font-size:14px"></i></button>
+    </div>
+    <div class="email-pop-body">
+      <div class="em-row"><b>Para:</b> <span>${to}</span></div>
+      <div class="em-row"><b>De:</b> <span>no-reply@configurator.co</span></div>
+      <h4>${subject}</h4>
+      ${body?`<p>${body}</p>`:'<p style="color:var(--text-3)">Notificación automática del workflow.</p>'}
+    </div>
+  `;
+  wrap.appendChild(div);
+  setTimeout(()=>{div.classList.add('out');setTimeout(()=>div.remove(),250)},6000);
+}
+
+/* ================================================================
+   NOTIFICATIONS BELL DEMO
+   ================================================================ */
+document.getElementById('notifBtn').addEventListener('click',()=>{
+  const events = [
+    ['Nueva tarea asignada','info','FORE-021 te fue asignada como responsable.'],
+    ['QA rechazó tarea','err','RECA-022 fue devuelta con 3 observaciones.'],
+    ['Caso escalado a L2','warn','SUP-1041 fue escalado por SLA en riesgo.'],
+    ['Deploy completado','ok','RECA-018 desplegado a producción exitosamente.'],
+  ];
+  const e = events[Math.floor(Math.random()*events.length)];
+  toast(e[0],e[1],e[2]);
+});
+
+/* ================================================================
+   INIT
+   ================================================================ */
+renderSteps();
+renderBars();
+renderTasks();
+renderSupport();
+renderParams();
+renderChecklists();
+renderKanban();
+renderCal();
+renderAudit();
+renderIntegrations();
+renderConfig();
+
+// Welcome toast
+setTimeout(()=>{
+  toast('Bienvenido, Jhon','ok','Tienes 7 tareas pendientes y 3 casos de soporte por revisar.');
+},500);
+
+// Periodic activity
+setInterval(()=>{
+  const ev = [
+    ()=>toast('Checklist completado','ok','FORE-019 · Checklist desarrollo al 100%.'),
+    ()=>emailPop('qa@cadena.com.co','Tarea lista para QA','RECA-024 ha pasado al estado "Pruebas calidad".'),
+    ()=>toast('Bug reportado','err','Nuevo bug crítico en MIG-003.'),
+    ()=>emailPop('cliente@xyz.co','Aprobación requerida','FORE-019 espera tu aprobación final.'),
+  ];
+  ev[Math.floor(Math.random()*ev.length)]();
+},22000);
+
+// Keyboard shortcut for search
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){
+    e.preventDefault();
+    document.querySelector('.search-wrap input').focus();
+  }
+});
+</script>
+</body>
+</html>
