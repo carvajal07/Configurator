@@ -1,6 +1,19 @@
-{
-  "_descripcion": "Configuración completa del demo de Configurator. Este JSON alimenta la vista 'Lista de chequeo', 'Despliegue a producción' y el tab de CP en Configuraciones. Está embebido dentro de configurator.html (constantes USERS, CHK_TIPOS, CLIENTES y CP_CATALOG) para que el demo funcione abriendo el HTML directamente sin servidor.",
+/* ============================================================================
+   configurator-data.js  ·  FUENTE DE DATOS DEL DEMO
+   ----------------------------------------------------------------------------
+   Edita este archivo para cambiar clientes, productos, requerimientos, usuarios
+   y el catálogo de CP. El HTML lo carga con <script src="configurator-data.js">,
+   por lo que los cambios se ven al recargar configurator.html (incluso abriéndolo
+   con doble clic / file://).
 
+   NOTA: es JSON puro dentro de "window.CONFIGURATOR_DATA = {...}". Se usa un .js
+   en vez de un .json porque los navegadores bloquean leer archivos .json con
+   fetch() cuando el HTML se abre como file:// (política de seguridad CORS).
+   ========================================================================== */
+window.CONFIGURATOR_DATA = {
+
+  // Usuario autenticado. Solo se muestran los CP asignados a este usuario
+  // (a menos que se desactive el toggle "Solo mis CP").
   "currentUser": "jhon",
 
   "usuarios": [
@@ -9,15 +22,20 @@
     { "id": "ana",   "nombre": "Ana Vega",      "ini": "AV", "rol": "Funcional" }
   ],
 
+  // Tipos de lista de chequeo (generales + un tipo por canal).
+  // "canal": null = aplica siempre; los de canal solo aparecen si el producto
+  // tiene ese canal habilitado. icon = icono MDI, color = variable CSS.
   "tiposChecklist": [
-    { "key": "generales", "label": "Checklist generales", "canal": null,  "icon": "clipboard-outline" },
-    { "key": "PE",        "label": "Checklist PE",         "canal": "PE",  "icon": "printer" },
-    { "key": "EN",        "label": "Checklist EN",         "canal": "EN",  "icon": "email-outline" },
-    { "key": "IMP",       "label": "Checklist IMP",        "canal": "IMP", "icon": "printer-3d" },
-    { "key": "DIG",       "label": "Checklist DIG",        "canal": "DIG", "icon": "monitor" },
-    { "key": "SMS",       "label": "Checklist SMS",        "canal": "SMS", "icon": "message-text-outline" }
+    { "key": "generales", "label": "Checklist generales", "canal": null,  "icon": "clipboard-outline",    "color": "var(--text-3)" },
+    { "key": "PE",        "label": "Checklist PE",         "canal": "PE",  "icon": "printer",              "color": "var(--primary)" },
+    { "key": "EN",        "label": "Checklist EN",         "canal": "EN",  "icon": "email-outline",        "color": "var(--info)" },
+    { "key": "IMP",       "label": "Checklist IMP",        "canal": "IMP", "icon": "printer-3d",           "color": "var(--purple)" },
+    { "key": "DIG",       "label": "Checklist DIG",        "canal": "DIG", "icon": "monitor",              "color": "var(--accent)" },
+    { "key": "SMS",       "label": "Checklist SMS",        "canal": "SMS", "icon": "message-text-outline", "color": "var(--warn)" }
   ],
 
+  // Clientes → productos → requerimientos (FORE/RECA).
+  // "canales" define qué checklist de canal aplican al producto.
   "clientes": [
     {
       "id": "0001_ITAU",
@@ -74,6 +92,11 @@
     }
   ],
 
+  // Catálogo de CP (casos de prueba).
+  //   tipo       -> key de tiposChecklist
+  //   modo       -> "manual" | "auto"
+  //   carga      -> true muestra botón de carga de evidencia
+  //   asignadoA  -> id de usuario
   "catalogoCp": [
     { "id": "G-001", "tipo": "generales", "modo": "auto",   "nombre": "Configuracion de recursos en los servidores", "carga": true,  "asignadoA": "jhon" },
     { "id": "G-002", "tipo": "generales", "modo": "auto",   "nombre": "Muestras Selectivas",                          "carga": true,  "asignadoA": "jhon" },
@@ -102,6 +125,7 @@
     { "id": "SMS-003", "tipo": "SMS", "modo": "auto",   "nombre": "Envío de muestras SMS",    "carga": false, "asignadoA": "jhon" }
   ],
 
+  // Documentación de las reglas del flujo (referencia; no altera la lógica).
   "reglasFlujo": {
     "soloMisChecklist": true,
     "manualAntesDeAuto": "Todos los CP manuales deben estar marcados para habilitar el botón 'Ejecutar CP automáticos'.",
@@ -117,4 +141,4 @@
       "Sincronizar plantillas y fileSchemas"
     ]
   }
-}
+};

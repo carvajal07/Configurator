@@ -2069,6 +2069,9 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
 <!-- ============= TOASTS ============= -->
 <div class="toasts" id="toasts"></div>
 
+<!-- Fuente de datos editable del demo (clientes, productos, checklist, CP) -->
+<script src="configurator-data.js"></script>
+
 <script>
 /* ================================================================
    STATE & DATA
@@ -2162,21 +2165,26 @@ const INTEGRATIONS = [
 ];
 
 /* ================================================================
-   DATA · Configuración completa para el demo funcional
-   (equivalente al archivo configurator-data.json del repositorio)
+   DATA · Configuración del demo
+   La fuente editable es configurator-data.js (window.CONFIGURATOR_DATA).
+   Si ese archivo no está disponible, se usan los valores por defecto de abajo.
    ================================================================ */
+const _DATA = (typeof window !== 'undefined' && window.CONFIGURATOR_DATA) ? window.CONFIGURATOR_DATA : {};
+if(!(typeof window !== 'undefined' && window.CONFIGURATOR_DATA)){
+  console.warn('[Configurator] No se cargó configurator-data.js — usando datos por defecto embebidos.');
+}
 
 // Usuario autenticado (solo se muestran los CP asignados a él)
-const CURRENT_USER = 'jhon';
+const CURRENT_USER = _DATA.currentUser || 'jhon';
 
-const USERS = [
+const USERS = _DATA.usuarios || [
   {id:'jhon',   nombre:'Jhon Carvajal', ini:'JC', rol:'Desarrollador'},
   {id:'maria',  nombre:'Maria López',   ini:'ML', rol:'Calidad'},
   {id:'ana',    nombre:'Ana Vega',      ini:'AV', rol:'Funcional'},
 ];
 
 // Tipos de lista de chequeo (generales + un tipo por canal)
-const CHK_TIPOS = [
+const CHK_TIPOS = _DATA.tiposChecklist || [
   {key:'generales', label:'Checklist generales', canal:null,  icon:'clipboard-outline',       color:'var(--text-3)'},
   {key:'PE',        label:'Checklist PE',         canal:'PE',  icon:'printer',                 color:'var(--primary)'},
   {key:'EN',        label:'Checklist EN',         canal:'EN',  icon:'email-outline',           color:'var(--info)'},
@@ -2186,7 +2194,7 @@ const CHK_TIPOS = [
 ];
 
 // Clientes → productos → requerimientos (FORE/RECA)
-const CLIENTES = [
+const CLIENTES = _DATA.clientes || [
   {id:'0005_CanalSMS', nombre:'0005_CanalSMS', productos:[
     {id:'CanalSMS', nombre:'CanalSMS', canales:['PE','EN','IMP','DIG','SMS'], requerimientos:[
       {id:'FORE-001', tipo:'FORE', desc:'Configuración inicial CanalSMS'},
@@ -2213,7 +2221,7 @@ const CLIENTES = [
 // Catálogo de CP (casos de prueba). Cada CP pertenece a un tipo de checklist,
 // tiene un modo (auto/manual), puede requerir carga de archivo y está asignado
 // a un usuario/rol. "canal" null = aplica a todos (generales).
-let CP_CATALOG = [
+let CP_CATALOG = _DATA.catalogoCp || [
   // ---- Generales ----
   {id:'G-001', tipo:'generales', modo:'auto',   nombre:'Configuracion de recursos en los servidores', carga:true,  asignadoA:'jhon'},
   {id:'G-002', tipo:'generales', modo:'auto',   nombre:'Muestras Selectivas',                          carga:true,  asignadoA:'jhon'},
