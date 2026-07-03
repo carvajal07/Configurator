@@ -4,7 +4,7 @@
   "currentUser": "jhon",
 
   "usuarios": [
-    { "id": "jhon",  "nombre": "Jhon Carvajal", "ini": "JC", "rol": "Desarrollador" },
+    { "id": "jhon",  "nombre": "Jhon Carvajal", "ini": "JC", "rol": "Especialista" },
     { "id": "maria", "nombre": "Maria López",   "ini": "ML", "rol": "Calidad" },
     { "id": "ana",   "nombre": "Ana Vega",      "ini": "AV", "rol": "Funcional" }
   ],
@@ -20,12 +20,12 @@
 
   "clientes": [
     {
-      "id": "0005_CanalSMS",
-      "nombre": "0005_CanalSMS",
+      "id": "0001_ITAU",
+      "nombre": "ITAU",
       "productos": [
         {
-          "id": "CanalSMS",
-          "nombre": "CanalSMS",
+          "id": "MultiExtracto",
+          "nombre": "MultiExtracto",
           "canales": ["PE", "EN", "IMP", "DIG", "SMS"],
           "requerimientos": [
             { "id": "FORE-001", "tipo": "FORE", "desc": "Configuración inicial CanalSMS" },
@@ -36,8 +36,8 @@
       ]
     },
     {
-      "id": "0012_BancoAndino",
-      "nombre": "0012_BancoAndino",
+      "id": "0002_Proteccion",
+      "nombre": "Proteccion",
       "productos": [
         {
           "id": "Extractos",
@@ -59,15 +59,15 @@
       ]
     },
     {
-      "id": "0020_DIAN",
-      "nombre": "0020_DIAN",
+      "id": "0003_COLFONDOS",
+      "nombre": "COLFONDOS",
       "productos": [
         {
-          "id": "Facturacion",
-          "nombre": "Facturación",
+          "id": "PensionesVoluntarias",
+          "nombre": "PensionesVoluntarias",
           "canales": ["IMP", "EN"],
           "requerimientos": [
-            { "id": "FORE-050", "tipo": "FORE", "desc": "Facturación electrónica masiva" }
+            { "id": "FORE-050", "tipo": "FORE", "desc": "Pensiones voluntarias" }
           ]
         }
       ]
