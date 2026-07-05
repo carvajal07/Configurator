@@ -2302,6 +2302,9 @@ let CP_CATALOG = _DATA.catalogoCp || [
   {id:'SMS-003', tipo:'SMS', modo:'auto',   nombre:'Envío de muestras SMS',             carga:false, asignadoA:'jhon'},
 ];
 
+// Checklist de paso a producción (desde configurator-data.js · hoja CP-PasoProduccion)
+const PASO_PROD = _DATA.pasoProduccion || [];
+
 /* ---------------- Estado en memoria del checklist ----------------
    La clave es `${reqId}::${cpId}` →
      { estado:'pending'|'pass'|'fail', uploaded:bool, obs:string } */
@@ -2313,6 +2316,19 @@ function getCp(reqId, cpId){
   return cpState[k];
 }
 function isPass(reqId, cpId){ return getCp(reqId, cpId).estado === 'pass'; }
+
+/* Estado del checklist de paso a producción. Clave `${reqId}::${ppId}` → {done, obs} */
+const deployState = {};
+function getPp(reqId, ppId){
+  const k = reqId + '::' + ppId;
+  if(!deployState[k]) deployState[k] = {done:false, obs:''};
+  return deployState[k];
+}
+// Ítems de paso a producción aplicables al producto (filtra por canal EN/PE)
+function ppForProduct(prod){
+  if(!prod) return [];
+  return PASO_PROD.filter(pp => !pp.canal || prod.canales.includes(pp.canal));
+}
 
 // Escapa texto para insertarlo de forma segura en HTML
 function esc(s){ return String(s==null?'':s)
@@ -3046,17 +3062,56 @@ function renderDeploy(){
 
   const all = cpsForContext(prod);
   const doneAll = all.filter(cp=>isPass(reqId,cp.id)).length;
-  const ready = all.length>0 && doneAll===all.length;
+  const checklistReady = all.length>0 && doneAll===all.length;
+
+  // Checklist de paso a producción (aplicable al producto)
+  const ppItems = ppForProduct(prod);
+  const ppReq = ppItems.filter(pp=>pp.requerido);
+  const ppReqDone = ppReq.filter(pp=>getPp(reqId,pp.id).done).length;
+  const ppReady = ppReq.length===0 || ppReqDone===ppReq.length;
+
+  const ready = checklistReady && ppReady;
+  const btnLabel = !checklistReady ? 'Checklist de calidad incompleto'
+                 : !ppReady ? 'Faltan pasos de producción'
+                 : 'Enviar a producción';
+
+  const ppRows = ppItems.map(pp=>{
+    const st = getPp(reqId, pp.id);
+    return `<div class="cp-item ${st.done?'est-pass':''}">
+      <div class="cp-main">
+        <div class="check ${st.done?'on':''}" onclick="togglePp('${reqId}','${pp.id}')"></div>
+        <div class="cp-body">
+          <div class="cp-name"><span class="cp-id">${pp.id}</span>${esc(pp.nombre)}</div>
+          ${pp.detalle?`<div class="cp-crit"><i class="mdi mdi-information-outline"></i>${esc(pp.detalle)}</div>`:''}
+        </div>
+        <div class="cp-tags">
+          <span class="badge" title="Aplica">${esc(pp.aplica)}</span>
+          ${pp.requerido?'<span class="badge b-info b-dot">Requerido</span>':'<span class="badge est-pend b-dot">Opcional</span>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 
   area.innerHTML = `
     <div class="dep-grid">
       <div class="card">
         <div class="card-head">
-          <h3>Estado de la lista de chequeo</h3>
-          <span class="badge ${ready?'b-ok b-dot':'b-warn b-dot'}">${doneAll}/${all.length} CP · ${ready?'Completado':'Incompleto'}</span>
+          <h3>Estado de la lista de chequeo (calidad)</h3>
+          <span class="badge ${checklistReady?'b-ok b-dot':'b-warn b-dot'}">${doneAll}/${all.length} CP · ${checklistReady?'Completado':'Incompleto'}</span>
         </div>
         <div class="card-body" style="padding-top:6px">
           ${rows || '<div style="color:var(--text-3);font-size:13px;padding:8px 0">Sin checklist para este producto.</div>'}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Checklist de paso a producción</h3>
+          <span class="badge ${ppReady?'b-ok b-dot':'b-warn b-dot'}">${ppReqDone}/${ppReq.length} requeridos</span>
+        </div>
+        <div class="card-body" style="padding-top:6px">
+          <p style="font-size:12px;color:var(--text-3);margin-bottom:6px">El desarrollador/calidad confirma cada paso antes de desplegar. Los ítems con canal solo aparecen si el producto lo tiene.</p>
+          ${ppRows || '<div style="color:var(--text-3);font-size:13px;padding:8px 0">Sin pasos de producción configurados.</div>'}
         </div>
       </div>
 
@@ -3065,13 +3120,13 @@ function renderDeploy(){
         <div class="card-body">
           <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;line-height:1.6">
             Al desplegar, el proceso ejecuta automáticamente: <b>querys a la base de datos</b>, actualización de
-            <b>recursos</b>, actualización del <b>WFD</b> y creación de cliente/producto en <b>NT</b>.
-            ${ready?'':'<br><span style="color:var(--warn)">⚠ Disponible únicamente cuando todos los checklist estén completados.</span>'}
+            <b>recursos</b>, actualización del <b>WFD</b> y creación de cliente/producto en <b>NT/GW</b>.
+            ${ready?'':'<br><span style="color:var(--warn)">⚠ Disponible cuando la lista de chequeo de calidad esté completa y se confirmen los pasos de producción requeridos.</span>'}
           </p>
           <button class="btn btn-primary dep-deploy-btn" id="deployBtn"
             ${ready?'':'disabled style="opacity:.5;cursor:not-allowed"'}
             onclick="runDeploy('${cli.id}','${prod.id}','${reqId}')">
-            <i class="mdi mdi-rocket-launch-outline"></i>${ready?'Enviar a producción':'Checklist incompleto'}
+            <i class="mdi mdi-rocket-launch-outline"></i>${btnLabel}
           </button>
           <div id="deployLog"></div>
         </div>
@@ -3079,10 +3134,22 @@ function renderDeploy(){
     </div>`;
 }
 
+// Marca/desmarca un paso de producción
+function togglePp(reqId, ppId){
+  const st = getPp(reqId, ppId);
+  st.done = !st.done;
+  renderDeploy();
+}
+
 function runDeploy(cliId, prodId, reqId){
   const prod = getProducto(getCliente(cliId), prodId);
   if(!(cpsForContext(prod).every(cp=>isPass(reqId,cp.id)))){
-    toast('Checklist incompleto','warn','No puedes desplegar hasta completar todos los CP.');
+    toast('Checklist incompleto','warn','No puedes desplegar hasta completar todos los CP de calidad.');
+    return;
+  }
+  const ppReq = ppForProduct(prod).filter(pp=>pp.requerido);
+  if(!ppReq.every(pp=>getPp(reqId,pp.id).done)){
+    toast('Pasos de producción pendientes','warn','Confirma todos los pasos de producción requeridos.');
     return;
   }
   const btn = document.getElementById('deployBtn');
@@ -3091,13 +3158,10 @@ function runDeploy(cliId, prodId, reqId){
   const log = document.getElementById('deployLog');
   log.innerHTML = '<div class="dep-log" id="depLogBox"></div>';
   const box = document.getElementById('depLogBox');
+  // Los pasos del log se arman con el checklist de paso a producción aplicable
   const steps = [
     'Validando estado de calidad (developmentProcessState = OK)...',
-    `Ejecutando querys en la base de datos para ${reqId}...`,
-    'Actualizando settings por ambiente (9,10,25,88,119,162,167)...',
-    'Actualizando recursos (resources / resourcesConfiguration)...',
-    'Actualizando WFD y jobs de impresión...',
-    'Creando cliente y producto en NT...',
+    ...ppForProduct(prod).map(pp=>`Ejecutando: ${pp.nombre}...`),
     'Sincronizando plantillas y fileSchemas...',
   ];
   let i=0;
@@ -3109,7 +3173,7 @@ function runDeploy(cliId, prodId, reqId){
         `<div class="dl-line"><span class="dl-t">[${stamp()}]</span><span class="dl-run">▸</span><span>${steps[i]}</span></div>`);
       box.scrollTop = box.scrollHeight;
       i++;
-      setTimeout(next, 650);
+      setTimeout(next, 320);
     } else {
       box.insertAdjacentHTML('beforeend',
         `<div class="dl-line"><span class="dl-t">[${stamp()}]</span><span class="dl-ok">✔</span><span class="dl-ok">Despliegue a producción completado correctamente.</span></div>`);

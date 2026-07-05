@@ -195,5 +195,30 @@ window.CONFIGURATOR_DATA = {
     { "id": "RET-CP05", "tipo": "RET", "modo": "auto", "nombre": "Indique todos los posibles canales de salida que tiene el proceso(Email, SMS, Físico, Retenido, etc.)", "criterio": "Canales de salida", "carga": false, "asignadoA": "jhon" },
     { "id": "RET-CP06", "tipo": "RET", "modo": "auto", "nombre": "Indique por medio de una lista la cantidad de registros por cada uno de los canales de salida indicados y deje de evidencia el reporte de cantidades de cada uno de los canales", "criterio": "Lista de canales con cantidad", "carga": false, "asignadoA": "jhon" },
     { "id": "RET-CP07", "tipo": "RET", "modo": "auto", "nombre": "¿La suma de todos los canales de salida es igual a la totalidad de registros trasmitidos por el cliente?", "criterio": "SI", "carga": false, "asignadoA": "jhon" }
+  ],
+
+  // Checklist de PASO A PRODUCCIÓN (hoja CP-PasoProduccion del Excel).
+  // Se diligencian en la vista "Despliegue a producción". Los ítems con
+  // canal (EN/PE) solo aplican si el producto tiene ese canal. requerido=false
+  // son opcionales (no bloquean el despliegue).
+  "pasoProduccion": [
+    { "id": "PP-CP01", "nombre": "Actualizacion Python", "detalle": "Se realizo la actualizacion del recurso Python en el ambiente productivo?", "aplica": "Si lleva preprocessing", "canal": null, "requerido": false },
+    { "id": "PP-CP02", "nombre": "Actualizacion WFD's del proceso", "detalle": "Se realizo actualizacion de los WFD Afectados o nuevos (Composer e impresión)?", "aplica": "TODOS", "canal": null, "requerido": true },
+    { "id": "PP-CP04", "nombre": "Configuracion cliente y producto", "detalle": "Se realizo el paso de los registros de customer, product y subProduct?", "aplica": "TODOS", "canal": null, "requerido": true },
+    { "id": "PP-CP05", "nombre": "Configuracion settings del producto", "detalle": "Se realizo el paso de los registros de setting, tanto product como subproduct?", "aplica": "TODOS", "canal": null, "requerido": true },
+    { "id": "PP-CP03", "nombre": "Configuracion correos de notificaciones", "detalle": "Los correos configurados en los setting 9,10,119 son los del cliente, procesamiento y controller? Tambien configurar setting 218 y 219 para correos de alertas", "aplica": "TODOS", "canal": null, "requerido": true },
+    { "id": "PP-CP06", "nombre": "Configuracion archivos del proceso", "detalle": "Se realizo el paso de los registros de las tablas fileByProduct y fileschemas?", "aplica": "TODOS", "canal": null, "requerido": true },
+    { "id": "PP-CP07", "nombre": "Configuracion usuarios", "detalle": "Se realizo el paso de los registros de las tablas user, process y userByProcess?", "aplica": "TODOS", "canal": null, "requerido": true },
+    { "id": "PP-CP08", "nombre": "Configuracion imágenes de recursos", "detalle": "Se realizo el paso de los registros de las tablas resourceConfiguration y resources?", "aplica": "Si lleva imágenes", "canal": null, "requerido": true },
+    { "id": "PP-CP09", "nombre": "Actualizacion imágenes en el FSX", "detalle": "Se realizo actualizacion de los recursos modificados o nuevos al FSX?", "aplica": "Si lleva imágenes", "canal": null, "requerido": true },
+    { "id": "PP-CP10", "nombre": "Configuracion cliente y producto en GW", "detalle": "Se realizo la creacion del cliente y producto en GW?", "aplica": "Si lleva EN", "canal": "EN", "requerido": true },
+    { "id": "PP-CP11", "nombre": "Configuracion de los template de EN", "detalle": "Creacion de template", "aplica": "Si lleva EN", "canal": "EN", "requerido": true },
+    { "id": "PP-CP12", "nombre": "Configuracion cliente y producto en NT", "detalle": "Se realizo la creacion de cliente y producto en NT?", "aplica": "Si lleva PE", "canal": "PE", "requerido": true },
+    { "id": "PP-CP13", "nombre": "Configuracion id de producto NT", "detalle": "Se debe garantizar que el id producto del setting 167 sea el correcto (Productivo)", "aplica": "Si lleva PE", "canal": "PE", "requerido": true },
+    { "id": "PP-CP14", "nombre": "Configuracion de reglas del proceso", "detalle": "Se realizo el paso de los registros de las tablas rulesByProduct", "aplica": "Si lleva reglas", "canal": null, "requerido": false },
+    { "id": "PP-CP15", "nombre": "Configuracion retenidas y muestras", "detalle": "Se realizo el paso de los registros de las tablas resources{IdProducto}", "aplica": "Si aplica", "canal": null, "requerido": false },
+    { "id": "PP-X01", "nombre": "Paso de equivalencias y template", "detalle": "", "aplica": "TODOS", "canal": null, "requerido": false },
+    { "id": "PP-X02", "nombre": "Configuracion de correos de alertas", "detalle": "", "aplica": "TODOS", "canal": null, "requerido": false },
+    { "id": "PP-X03", "nombre": "Equivalencias CCM", "detalle": "Configurar los nombres de producto y subproducto en la tabla CCMProductRelations", "aplica": "TODOS", "canal": null, "requerido": false }
   ]
 };
