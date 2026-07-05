@@ -665,10 +665,11 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
   font-family:var(--font-mono);
 }
 .acc-body{
-  max-height:0;overflow:hidden;
-  transition:max-height .3s ease;
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .3s ease;
 }
-.acc.open .acc-body{max-height:1500px}
+.acc.open .acc-body{grid-template-rows:1fr}
+.acc-body > .acc-body-inner{overflow:hidden;min-height:0}
 .acc-body-inner{padding:0 18px 18px;border-top:1px solid var(--border)}
 
 .checklist-item{
@@ -1772,8 +1773,10 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
               </div>
             </div>
             <div class="modal-foot" style="border-top:1px solid var(--border)">
+              <span id="cpEditHint" style="display:none;margin-right:auto;font-size:12.5px;color:var(--primary);font-weight:600;align-self:center"></span>
+              <button class="btn" id="cpCancelBtn" style="display:none" onclick="cancelEditCp()">Cancelar edición</button>
               <button class="btn" onclick="clearCpForm()">Limpiar</button>
-              <button class="btn btn-primary" onclick="addCp()"><i class="mdi mdi-plus"></i>Agregar CP</button>
+              <button class="btn btn-primary" id="cpSaveBtn" onclick="saveCp()"><i class="mdi mdi-plus"></i>Agregar CP</button>
             </div>
           </div>
 
@@ -2615,6 +2618,7 @@ function renderCpGroup(prod, reqId, tipo, modo, locked){
             </div>
             <div class="cp-tags">
               ${estBadge}
+              ${(st.estado==='pass' && cp.carga && !st.uploaded)?'<span class="badge b-warn b-dot" title="Falta adjuntar evidencia">Sin evidencia</span>':''}
               ${cp.modo==='auto'?'<span class="badge b-purple b-dot">AUTO</span>':'<span class="badge b-info b-dot">MANUAL</span>'}
               <div class="mini-avatar" style="background:${avatarBg(userIni(cp.asignadoA))}" title="${userName(cp.asignadoA)}">${userIni(cp.asignadoA)}</div>
               ${cp.modo==='manual'
@@ -2719,11 +2723,11 @@ function setObs(reqId, cpId, val){ getCp(reqId, cpId).obs = val; }
 function setEstado(reqId, cpId, val){
   const st = getCp(reqId, cpId);
   const cp = CP_CATALOG.find(c=>c.id===cpId);
-  if(val==='pass' && cp.carga && !st.uploaded){
-    toast('Falta la evidencia','warn',`Carga el archivo del CP ${cpId} antes de marcarlo como "Pasó".`);
-    return;
-  }
   st.estado = (st.estado===val) ? 'pending' : val;
+  // La evidencia es opcional (no bloquea): solo se recuerda si el CP la requiere
+  if(st.estado==='pass' && cp.carga && !st.uploaded){
+    toast('Evidencia pendiente','info',`Marcado como "Pasó". Recuerda adjuntar la evidencia del CP ${cpId}.`);
+  }
   reRenderChk();
 }
 
@@ -2833,31 +2837,86 @@ function initCpForm(){
   document.getElementById('cpTipo').innerHTML = CHK_TIPOS.map(t=>`<option value="${t.key}">${t.label}</option>`).join('');
   document.getElementById('cpAsignado').innerHTML = USERS.map(u=>`<option value="${u.id}">${u.nombre} (${u.rol})</option>`).join('');
 }
+let editingCpId = null;
+
 function clearCpForm(){
   document.getElementById('cpNombre').value='';
   document.getElementById('cpCriterio').value='';
   document.getElementById('cpModo').value='manual';
   document.getElementById('cpCarga').classList.add('on');
 }
-function addCp(){
+
+// Lee los valores del formulario de CP
+function readCpForm(){
   const nombre = document.getElementById('cpNombre').value.trim();
-  if(!nombre){ toast('Falta el nombre','warn','Escribe el nombre del CP.'); return; }
-  const tipo = document.getElementById('cpTipo').value;
-  const modo = document.getElementById('cpModo').value;
-  const criterio = document.getElementById('cpCriterio').value.trim();
-  const asignadoA = document.getElementById('cpAsignado').value;
-  const carga = document.getElementById('cpCarga').classList.contains('on');
-  // Genera un id incremental por tipo
-  const prefix = tipo==='generales' ? 'GENERALES' : tipo;
-  const count = CP_CATALOG.filter(c=>c.tipo===tipo).length + 1;
-  const id = `${prefix}-CP${String(count).padStart(2,'0')}`;
-  CP_CATALOG.push({id, tipo, modo, nombre, criterio, carga, asignadoA});
-  toast('CP agregado','ok',`${id} · ${nombre} → ${CHK_TIPOS.find(t=>t.key===tipo).label}`);
+  return {
+    nombre,
+    tipo: document.getElementById('cpTipo').value,
+    modo: document.getElementById('cpModo').value,
+    criterio: document.getElementById('cpCriterio').value.trim(),
+    asignadoA: document.getElementById('cpAsignado').value,
+    carga: document.getElementById('cpCarga').classList.contains('on'),
+  };
+}
+
+// Botón principal: agrega o guarda según el modo
+function saveCp(){ editingCpId ? updateCp() : addCp(); }
+
+function addCp(){
+  const d = readCpForm();
+  if(!d.nombre){ toast('Falta el nombre','warn','Escribe el nombre del CP.'); return; }
+  const prefix = d.tipo==='generales' ? 'GENERALES' : d.tipo;
+  // id incremental que no choque con existentes
+  let n = CP_CATALOG.filter(c=>c.tipo===d.tipo).length + 1;
+  let id;
+  do { id = `${prefix}-CP${String(n++).padStart(2,'0')}`; } while(CP_CATALOG.some(c=>c.id===id));
+  CP_CATALOG.push({id, tipo:d.tipo, modo:d.modo, nombre:d.nombre, criterio:d.criterio, carga:d.carga, asignadoA:d.asignadoA});
+  toast('CP agregado','ok',`${id} · ${d.nombre} → ${CHK_TIPOS.find(t=>t.key===d.tipo).label}`);
   clearCpForm();
   renderCpConfig();
   renderChecklists();
 }
+
+// Carga un CP en el formulario para editarlo
+function editCp(id){
+  const cp = CP_CATALOG.find(c=>c.id===id);
+  if(!cp) return;
+  document.getElementById('cpTipo').value = cp.tipo;
+  document.getElementById('cpModo').value = cp.modo;
+  document.getElementById('cpNombre').value = cp.nombre;
+  document.getElementById('cpCriterio').value = cp.criterio || '';
+  document.getElementById('cpAsignado').value = cp.asignadoA;
+  document.getElementById('cpCarga').classList.toggle('on', !!cp.carga);
+  editingCpId = id;
+  document.getElementById('cpSaveBtn').innerHTML = '<i class="mdi mdi-content-save-outline"></i>Guardar cambios';
+  document.getElementById('cpCancelBtn').style.display = '';
+  const hint = document.getElementById('cpEditHint');
+  hint.style.display = ''; hint.textContent = `Editando ${id}`;
+  document.getElementById('cpNombre').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function updateCp(){
+  const cp = CP_CATALOG.find(c=>c.id===editingCpId);
+  if(!cp){ cancelEditCp(); return; }
+  const d = readCpForm();
+  if(!d.nombre){ toast('Falta el nombre','warn','Escribe el nombre del CP.'); return; }
+  Object.assign(cp, {tipo:d.tipo, modo:d.modo, nombre:d.nombre, criterio:d.criterio, carga:d.carga, asignadoA:d.asignadoA});
+  toast('CP actualizado','ok',`${cp.id} · cambios guardados.`);
+  cancelEditCp();
+  renderCpConfig();
+  renderChecklists();
+}
+
+function cancelEditCp(){
+  editingCpId = null;
+  clearCpForm();
+  document.getElementById('cpSaveBtn').innerHTML = '<i class="mdi mdi-plus"></i>Agregar CP';
+  document.getElementById('cpCancelBtn').style.display = 'none';
+  document.getElementById('cpEditHint').style.display = 'none';
+}
+
 function removeCp(id){
+  if(editingCpId===id) cancelEditCp();
   CP_CATALOG = CP_CATALOG.filter(c=>c.id!==id);
   toast('CP eliminado','info',`Se eliminó ${id} del catálogo.`);
   renderCpConfig();
@@ -2888,6 +2947,7 @@ function renderCpConfig(){
                   ${cp.modo==='auto'?'<span class="badge b-purple b-dot">AUTO</span>':'<span class="badge b-info b-dot">MANUAL</span>'}
                   ${cp.carga?'<span class="badge"><i class="mdi mdi-paperclip"></i>Carga</span>':''}
                   <div class="mini-avatar" style="background:${avatarBg(userIni(cp.asignadoA))}" title="${userName(cp.asignadoA)}">${userIni(cp.asignadoA)}</div>
+                  <button class="icon-btn" title="Editar CP" onclick="editCp('${cp.id}')"><i class="mdi mdi-pencil-outline"></i></button>
                   <button class="icon-btn" title="Eliminar CP" onclick="removeCp('${cp.id}')"><i class="mdi mdi-trash-can-outline"></i></button>
                 </div>
               </div>
