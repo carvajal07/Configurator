@@ -669,7 +669,7 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
   transition:grid-template-rows .3s ease;
 }
 .acc.open .acc-body{grid-template-rows:1fr}
-.acc-body > .acc-body-inner{overflow:hidden;min-height:0}
+.acc-clip{overflow:hidden;min-height:0}
 .acc-body-inner{padding:0 18px 18px;border-top:1px solid var(--border)}
 
 .checklist-item{
@@ -1733,51 +1733,9 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
 
         <!-- PANE: CP · Lista de chequeo -->
         <div class="cpane" data-cpane="cps" style="display:none">
-          <div class="card" style="margin-bottom:18px">
-            <div class="card-head">
-              <h3>Agregar CP a la lista de chequeo</h3>
-              <small style="color:var(--text-3);font-size:12px">Define un nuevo caso de prueba y a qué lista pertenece</small>
-            </div>
-            <div class="card-body">
-              <div class="form-grid">
-                <div>
-                  <div class="label">Tipo de lista de chequeo</div>
-                  <select class="select" id="cpTipo"></select>
-                </div>
-                <div>
-                  <div class="label">Modo de ejecución</div>
-                  <select class="select" id="cpModo">
-                    <option value="manual">Manual</option>
-                    <option value="auto">Automático</option>
-                  </select>
-                </div>
-                <div class="span-2">
-                  <div class="label">Nombre del CP</div>
-                  <input class="input" id="cpNombre" placeholder="EJ: Configuracion de recursos en los servidores" />
-                </div>
-                <div class="span-2">
-                  <div class="label">Criterio de aceptación</div>
-                  <input class="input" id="cpCriterio" placeholder="EJ: SI · 0 warnings · Evidencia de aprobación..." />
-                </div>
-                <div>
-                  <div class="label">Asignado a</div>
-                  <select class="select" id="cpAsignado"></select>
-                </div>
-                <div>
-                  <div class="label">Requiere carga de archivo</div>
-                  <label class="mine-toggle" style="height:38px">
-                    <span class="switch on" id="cpCarga" onclick="this.classList.toggle('on')"></span>
-                    <span>Habilitar botón de carga</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="modal-foot" style="border-top:1px solid var(--border)">
-              <span id="cpEditHint" style="display:none;margin-right:auto;font-size:12.5px;color:var(--primary);font-weight:600;align-self:center"></span>
-              <button class="btn" id="cpCancelBtn" style="display:none" onclick="cancelEditCp()">Cancelar edición</button>
-              <button class="btn" onclick="clearCpForm()">Limpiar</button>
-              <button class="btn btn-primary" id="cpSaveBtn" onclick="saveCp()"><i class="mdi mdi-plus"></i>Agregar CP</button>
-            </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+            <small style="color:var(--text-3);font-size:12.5px">Administra los casos de prueba (CP) de cada lista de chequeo.</small>
+            <button class="btn btn-primary" onclick="openCpModal()"><i class="mdi mdi-plus"></i>Agregar CP</button>
           </div>
 
           <div class="accordion" id="cpConfigAcc"></div>
@@ -2107,6 +2065,55 @@ textarea.input{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
     <div class="modal-foot">
       <button class="btn" onclick="closeModal('modalNewParam')">Cancelar</button>
       <button class="btn btn-primary" onclick="toast('Parámetro creado','ok','El parámetro fue guardado correctamente.');closeModal('modalNewParam')"><i class="mdi mdi-check"></i>Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= MODAL: Crear / Editar CP ============= -->
+<div class="modal-mask" id="modalCp">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="cpModalTitle">Agregar CP</h3>
+      <button class="icon-btn" onclick="closeCpModal()"><i class="mdi mdi-close" style="font-size:20px"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div>
+          <div class="label">Tipo de lista de chequeo</div>
+          <select class="select" id="cpTipo"></select>
+        </div>
+        <div>
+          <div class="label">Modo de ejecución</div>
+          <select class="select" id="cpModo">
+            <option value="manual">Manual</option>
+            <option value="auto">Automático</option>
+          </select>
+        </div>
+        <div class="span-2">
+          <div class="label">Nombre del CP</div>
+          <input class="input" id="cpNombre" placeholder="EJ: Configuracion de recursos en los servidores" />
+        </div>
+        <div class="span-2">
+          <div class="label">Criterio de aceptación</div>
+          <input class="input" id="cpCriterio" placeholder="EJ: SI · 0 warnings · Evidencia de aprobación..." />
+        </div>
+        <div>
+          <div class="label">Asignado a</div>
+          <select class="select" id="cpAsignado"></select>
+        </div>
+        <div>
+          <div class="label">Requiere carga de archivo</div>
+          <label class="mine-toggle" style="height:38px">
+            <span class="switch on" id="cpCarga" onclick="this.classList.toggle('on')"></span>
+            <span>Habilitar botón de carga</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span id="cpEditHint" style="display:none;margin-right:auto;font-size:12.5px;color:var(--primary);font-weight:600;align-self:center"></span>
+      <button class="btn" onclick="closeCpModal()">Cancelar</button>
+      <button class="btn btn-primary" id="cpSaveBtn" onclick="saveCp()"><i class="mdi mdi-plus"></i>Agregar CP</button>
     </div>
   </div>
 </div>
@@ -2600,7 +2607,7 @@ function renderCpGroup(prod, reqId, tipo, modo, locked){
         ${pct===100?'<span class="badge b-ok b-dot">Completo</span>':''}
       </div>
     </div>
-    <div class="acc-body"><div class="acc-body-inner">
+    <div class="acc-body"><div class="acc-clip"><div class="acc-body-inner">
       ${items.map(cp=>{
         const st = getCp(reqId,cp.id);
         const isLocked = locked && st.estado!=='pass';
@@ -2636,7 +2643,7 @@ function renderCpGroup(prod, reqId, tipo, modo, locked){
           </div>
         </div>`;
       }).join('')}
-    </div></div>
+    </div></div></div>
   </div>`;
 }
 
@@ -2719,14 +2726,28 @@ function uploadCp(reqId, cpId, btn){
 // Guarda observaciones sin re-render (para no interrumpir la escritura)
 function setObs(reqId, cpId, val){ getCp(reqId, cpId).obs = val; }
 
+// ¿Todos los CP de un grupo (tipo+modo) pasaron?
+function groupComplete(prod, reqId, tipoKey, modo){
+  const items = cpsForContext(prod).filter(cp=>cp.tipo===tipoKey && cp.modo===modo);
+  return items.length>0 && items.every(cp=>isPass(reqId,cp.id));
+}
+
 // Marca el veredicto de un CP manual (pasó / no pasó). Re-click en el mismo => vuelve a pendiente.
 function setEstado(reqId, cpId, val){
   const st = getCp(reqId, cpId);
   const cp = CP_CATALOG.find(c=>c.id===cpId);
+  const prod = getProducto(getCliente(sel.clienteId), sel.productoId);
+  const accKey = cp.modo+'::'+cp.tipo;
+  const wasComplete = groupComplete(prod, reqId, cp.tipo, cp.modo);
   st.estado = (st.estado===val) ? 'pending' : val;
   // La evidencia es opcional (no bloquea): solo se recuerda si el CP la requiere
   if(st.estado==='pass' && cp.carga && !st.uploaded){
     toast('Evidencia pendiente','info',`Marcado como "Pasó". Recuerda adjuntar la evidencia del CP ${cpId}.`);
+  }
+  // Al completar el grupo (transición) se cierra el acordeón automáticamente
+  if(!wasComplete && groupComplete(prod, reqId, cp.tipo, cp.modo)){
+    openAccs.delete(accKey);
+    toast('Checklist completo','ok',`${CHK_TIPOS.find(t=>t.key===cp.tipo).label} · todos los CP pasaron.`);
   }
   reRenderChk();
 }
@@ -2747,6 +2768,9 @@ function runAutoCps(){
       reRenderChk();
       if(i===autos.length-1){
         setTimeout(()=>{
+          // Cierra automáticamente los acordeones de los grupos automáticos completos
+          CHK_TIPOS.forEach(t=>{ if(groupComplete(prod, sel.reqId, t.key, 'auto')) openAccs.delete('auto::'+t.key); });
+          reRenderChk();
           toast('CP automáticos completados','ok','Todos los casos automáticos pasaron correctamente.');
           if(allPass(prod, sel.reqId)){
             emailPop('calidad@cadena.com.co','Checklist completado · habilitado paso a producción',
@@ -2808,7 +2832,7 @@ function renderConfig(){
         <div class="acc-title">${s.title}</div>
         <div class="acc-meta"><span class="acc-progress">${s.items.length} ajustes</span></div>
       </div>
-      <div class="acc-body"><div class="acc-body-inner">
+      <div class="acc-body"><div class="acc-clip"><div class="acc-body-inner">
         ${s.items.map(it=>`
           <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 6px;border-bottom:1px solid var(--border)">
             <div style="font-size:13.5px;font-weight:500">${it.label}</div>
@@ -2818,7 +2842,7 @@ function renderConfig(){
             }
           </div>
         `).join('')}
-      </div></div>
+      </div></div></div>
     </div>
   `).join('');
 }
@@ -2872,12 +2896,24 @@ function addCp(){
   do { id = `${prefix}-CP${String(n++).padStart(2,'0')}`; } while(CP_CATALOG.some(c=>c.id===id));
   CP_CATALOG.push({id, tipo:d.tipo, modo:d.modo, nombre:d.nombre, criterio:d.criterio, carga:d.carga, asignadoA:d.asignadoA});
   toast('CP agregado','ok',`${id} · ${d.nombre} → ${CHK_TIPOS.find(t=>t.key===d.tipo).label}`);
-  clearCpForm();
+  closeCpModal();
   renderCpConfig();
   renderChecklists();
 }
 
-// Carga un CP en el formulario para editarlo
+// Abre el modal en modo "crear"
+function openCpModal(){
+  editingCpId = null;
+  clearCpForm();
+  document.getElementById('cpTipo').selectedIndex = 0;
+  document.getElementById('cpAsignado').value = CURRENT_USER;
+  document.getElementById('cpModalTitle').textContent = 'Agregar CP';
+  document.getElementById('cpSaveBtn').innerHTML = '<i class="mdi mdi-plus"></i>Agregar CP';
+  document.getElementById('cpEditHint').style.display = 'none';
+  openModal('modalCp');
+}
+
+// Abre el modal en modo "editar" con el CP cargado
 function editCp(id){
   const cp = CP_CATALOG.find(c=>c.id===id);
   if(!cp) return;
@@ -2888,35 +2924,34 @@ function editCp(id){
   document.getElementById('cpAsignado').value = cp.asignadoA;
   document.getElementById('cpCarga').classList.toggle('on', !!cp.carga);
   editingCpId = id;
+  document.getElementById('cpModalTitle').textContent = 'Editar CP';
   document.getElementById('cpSaveBtn').innerHTML = '<i class="mdi mdi-content-save-outline"></i>Guardar cambios';
-  document.getElementById('cpCancelBtn').style.display = '';
   const hint = document.getElementById('cpEditHint');
   hint.style.display = ''; hint.textContent = `Editando ${id}`;
-  document.getElementById('cpNombre').scrollIntoView({behavior:'smooth', block:'center'});
+  openModal('modalCp');
 }
 
 function updateCp(){
   const cp = CP_CATALOG.find(c=>c.id===editingCpId);
-  if(!cp){ cancelEditCp(); return; }
+  if(!cp){ closeCpModal(); return; }
   const d = readCpForm();
   if(!d.nombre){ toast('Falta el nombre','warn','Escribe el nombre del CP.'); return; }
   Object.assign(cp, {tipo:d.tipo, modo:d.modo, nombre:d.nombre, criterio:d.criterio, carga:d.carga, asignadoA:d.asignadoA});
   toast('CP actualizado','ok',`${cp.id} · cambios guardados.`);
-  cancelEditCp();
+  closeCpModal();
   renderCpConfig();
   renderChecklists();
 }
 
-function cancelEditCp(){
+// Cierra el modal y resetea el estado de edición
+function closeCpModal(){
   editingCpId = null;
   clearCpForm();
-  document.getElementById('cpSaveBtn').innerHTML = '<i class="mdi mdi-plus"></i>Agregar CP';
-  document.getElementById('cpCancelBtn').style.display = 'none';
-  document.getElementById('cpEditHint').style.display = 'none';
+  closeModal('modalCp');
 }
 
 function removeCp(id){
-  if(editingCpId===id) cancelEditCp();
+  if(editingCpId===id) closeCpModal();
   CP_CATALOG = CP_CATALOG.filter(c=>c.id!==id);
   toast('CP eliminado','info',`Se eliminó ${id} del catálogo.`);
   renderCpConfig();
@@ -2934,7 +2969,7 @@ function renderCpConfig(){
         <div class="acc-title">${t.label}</div>
         <div class="acc-meta"><span class="acc-progress">${items.length} CP</span></div>
       </div>
-      <div class="acc-body"><div class="acc-body-inner">
+      <div class="acc-body"><div class="acc-clip"><div class="acc-body-inner">
         ${items.length===0 ? '<div style="padding:12px 6px;color:var(--text-3);font-size:13px">Sin CP configurados.</div>'
           : items.map(cp=>`
             <div class="cp-item">
@@ -2952,7 +2987,7 @@ function renderCpConfig(){
                 </div>
               </div>
             </div>`).join('')}
-      </div></div>
+      </div></div></div>
     </div>`;
   }).join('');
 }
